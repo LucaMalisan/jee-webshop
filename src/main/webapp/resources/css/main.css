@@ -1,1 +1,39 @@
 @import "https://cdn.simplecss.org/simple.css";
+
+.small-margin {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.row-no-space, .row-small-space, .row-big-space  {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.row-small-space {
+  gap: 10px;
+}
+
+.row-big-space {
+  gap: 50px;
+}
+
+.low-height {
+  height: 60px;
+}
+
+.small-image {
+  width: 50px;
+  height: 50px;
+}
+
+.logo {
+  width: auto;
+  height: 90px;
+}
+
+.fill-up {
+  display: flex;
+  flex: 1 2 auto;
+}

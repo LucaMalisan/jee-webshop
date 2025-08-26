@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html" xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:h="jakarta.faces.html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <h:head>
-    <title> Article Permissions </title>
+    <title> SwissTechOnline </title>
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
-    <link rel="stylesheet" href="../../resources/css/main.css"/>
+    <link href="#{request.contextPath}/resources/css/main.css" rel="stylesheet"/>
 </h:head>
 <h:body>
-
+    <header>
+        <ui:include src="header.xhtml" />
+    </header>
     <div class="main">
-        <h2>Article Permissions</h2>
+        <h2>SwissTechOnline</h2>
         <div><h:outputText id="is-saved" value="#{helloBean.getMessage()}"/></div>
     </div>
 </h:body>
