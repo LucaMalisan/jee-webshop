@@ -17,9 +17,6 @@ public class Article implements Serializable {
     @Column(name = "uuid", updatable = false, nullable = false)
     private UUID uuid;
 
-    @Column(name = "imageUrl")
-    private String imageUrl;
-
     @Column(name = "title")
     private String title;
 
@@ -27,7 +24,7 @@ public class Article implements Serializable {
     private String description;
 
     @Column(name = "priceCHF")
-    private Float priceCHF;
+    private Double priceCHF;
 
     @Column(name = "discountPercent")
     private Integer discountPercent;

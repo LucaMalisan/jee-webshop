@@ -5,7 +5,8 @@
              version="3.0">
   <persistence-unit name="primary">
     <jta-data-source>postgres_resource</jta-data-source>
-    <class> src.model.HelloWorld </class>
+    <class> src.model.Article </class>
+    <class> src.model.ArticleImage </class>
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
       <property name="hibernate.hbm2ddl.auto" value="update"/>

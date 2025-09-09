@@ -1,11 +1,16 @@
 @import "https://cdn.simplecss.org/simple.css";
 
+div.main{
+  display: flex;
+  flex-direction: row;
+}
+
 .small-margin {
   margin-left: 10px;
   margin-right: 10px;
 }
 
-.row-no-space, .row-small-space, .row-big-space  {
+.row-no-space, .row-small-space, .row-big-space {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -35,4 +40,58 @@
 .fill-up {
   display: flex;
   flex: 1 2 auto;
+}
+
+.article-entry {
+  display: flex;
+  flex-direction: column;
+  padding: 35px;
+  border-right: 1px solid #464444;
+  width: fit-content;
+}
+
+.article-image {
+  max-width: min(80vw, 300px);
+  margin-top: 10px;
+}
+
+.article-entry p {
+  margin: 5px 5px 5px 0;
+}
+
+p.discount {
+  background-color: red;
+  width: fit-content;
+  padding: 5px 10px;
+}
+
+.small-font {
+  font-size: 16px;
+}
+
+.medium-font {
+  font-size: 24px;
+}
+
+.article-entry.not-available :not(:has(#not-available)) {
+  opacity: 0.2;
+}
+
+.article-entry.available #not-available {
+  display: none;
+}
+
+.img-container {
+  display: flex;
+  justify-content: center;
+}
+
+.article-entry.not-available .img-container #not-available {
+  opacity: 1;
+  align-self: center;
+  position: absolute;
+}
+
+.hidden {
+  opacity: 0;
 }
