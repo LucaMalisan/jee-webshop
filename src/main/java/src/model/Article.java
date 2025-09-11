@@ -2,6 +2,7 @@ package src.model;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,12 +24,18 @@ public class Article implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "priceCHF")
-    private Double priceCHF;
+    @Column(name = "sellingPrice")
+    private Double sellingPrice;
 
-    @Column(name = "discountPercent")
-    private Integer discountPercent;
+    @Column(name = "listPrice")
+    private Double listPrice;
 
-    @Column(name = "stock")
-    private Integer stock;
+    @Column(name = "available")
+    private Boolean available;
+
+    @Column(name = "category")
+    private String category;
+
+    @OneToMany(mappedBy = "article")
+    private List<ArticleImage> imageList;
 }

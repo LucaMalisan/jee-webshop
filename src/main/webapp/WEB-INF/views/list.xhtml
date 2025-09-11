@@ -15,15 +15,14 @@
     <h2>Article Overview</h2>
     <div class="main">
         <ui:repeat value="#{articleBean.articles}" var="article">
-            <div class="article-entry #{article.stock > 0 ? 'available' : 'not-available'}">
+            <div class="article-entry #{article.available ? 'available' : 'not-available'}">
                 <div class="img-container">
                     <p class="medium-font" id="not-available"> Article not available </p>
-                    <img class="article-image"
-                         src="https://www.fust.ch/_next/image?url=https%3A%2F%2Fapi-nettoshop-prod-external.coop.ch%2Fmedias%2F10799095-1.jpg%3Fcontext%3DbWFzdGVyfGNvbW1vbl9wcm9kdWN0fDM2MjQ1MzV8aW1hZ2UvanBlZ3xhRGcxTDJnNE5pOHhNREV3TXprNE1Ua3pNalUzTkM4eE1EYzVPVEE1TlY4eExtcHdad3w5MjFjYjYyNjE2ZjA3MDFkN2VjMDIxYmQ0NzZhZDRkNWYxODE2YTU0MDdlNjI1ZjE0NjU4MWExNjk4ZGMwYmIz&amp;w=768&amp;q=75"/>
+                    <img class="article-image" src="#{articleBean.getPrimaryImageURL(article)}"/>
                 </div>
-                <p class="discount #{article.discountPercent == null ? 'hidden' : ''}"><b> -#{article.discountPercent}% </b></p>
+                <p class="discount #{article.listPrice == null ? 'hidden' : ''}"><b> -#{articleBean.getDiscountPercent(article)}% </b></p>
                 <p class="small-font"> Category </p>
-                <p class="small-font"> #{articleBean.formatDiscount(article)} </p>
+                <p class="small-font"> #{articleBean.formatPrice(article)} </p>
                 <p class="medium-font"> #{article.title} </p>
             </div>
         </ui:repeat>

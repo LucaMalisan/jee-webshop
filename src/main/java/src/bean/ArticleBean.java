@@ -6,10 +6,12 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.java.Log;
 
 import java.io.Serializable;
 import src.model.Article;
+import src.model.ArticleImage;
 
 @Named("articleBean")
 @Log
@@ -23,17 +25,24 @@ public class ArticleBean implements Serializable {
     return query.getResultList();
   }
 
-  public String calculatePriceOfArticle(Article article) {
-    double discount = article.getDiscountPercent() == null ? 0 : article.getDiscountPercent();
-    double netPrice = ((100.0 - discount) / 100.0) * article.getPriceCHF();
-    return String.format("%.2f", netPrice);
+  public String getDiscountPercent(Article article) {
+    if (article.getListPrice() == null) {
+      return null;
+    }
+
+    return Math.round((100 - (article.getSellingPrice() / article.getListPrice()) * 100)) + "";
   }
 
-  public String formatDiscount(Article article) {
-    if (article.getDiscountPercent() != null) {
-      return String.format(
-          "%s was %d CHF", this.calculatePriceOfArticle(article), article.getDiscountPercent());
+  public String formatPrice(Article article) {
+    if (article.getListPrice() != null) {
+      return String.format("%.2f was %.2f CHF", article.getSellingPrice(), article.getListPrice());
     }
-    return String.format("%s CHF", article.getPriceCHF().toString());
+    return String.format("%.2f CHF", article.getSellingPrice());
+  }
+
+  public String getPrimaryImageURL(Article article) {
+    Optional<ArticleImage> optImage =
+        article.getImageList().stream().filter(e -> e.getPosition() == 1).findAny();
+    return optImage.map(ArticleImage::getImageURL).orElse("");
   }
 }

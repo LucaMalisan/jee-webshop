@@ -1,8 +1,13 @@
 @import "https://cdn.simplecss.org/simple.css";
 
+body{
+  display: block;
+  padding: 50px;
+}
+
 div.main{
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(3, 2fr);
 }
 
 .small-margin {
@@ -47,6 +52,7 @@ div.main{
   flex-direction: column;
   padding: 35px;
   border-right: 1px solid #464444;
+  border-bottom: 1px solid #464444;
   width: fit-content;
 }
 

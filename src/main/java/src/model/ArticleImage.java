@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.UUID;
 import lombok.Getter;
@@ -27,6 +29,10 @@ public class ArticleImage {
   @Column(name = "imageURL")
   private String imageURL;
 
-  @Column(name = "\"order\"")
-  private Integer order;
+  @Column(name = "position")
+  private Integer position;
+
+  @ManyToOne
+  @JoinColumn(name = "articleUuid", insertable = false, updatable = false)
+  private Article article;
 }
