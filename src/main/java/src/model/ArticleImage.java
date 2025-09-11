@@ -23,16 +23,16 @@ public class ArticleImage {
   @Column(name = "uuid", updatable = false, nullable = false)
   private UUID uuid;
 
-  @Column(name = "articleUuid")
-  private UUID articleUuid;
+  @Column(name = "article_sku")
+  private long articleSku;
 
-  @Column(name = "imageURL")
+  @Column(name = "image_uRL")
   private String imageURL;
 
   @Column(name = "position")
   private Integer position;
 
   @ManyToOne
-  @JoinColumn(name = "articleUuid", insertable = false, updatable = false)
+  @JoinColumn(name = "article_sku", insertable = false, updatable = false)
   private Article article;
 }

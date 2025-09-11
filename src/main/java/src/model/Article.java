@@ -14,9 +14,8 @@ import lombok.Setter;
 public class Article implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "uuid", updatable = false, nullable = false)
-    private UUID uuid;
+    @Column(name = "sku", updatable = false, nullable = false)
+    private long sku;
 
     @Column(name = "title")
     private String title;
