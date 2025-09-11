@@ -1,11 +1,11 @@
 @import "https://cdn.simplecss.org/simple.css";
 
-body{
+body {
   display: block;
   padding: 50px;
 }
 
-div.main{
+div.main {
   display: grid;
   grid-template-columns: repeat(3, 2fr);
 }
@@ -65,7 +65,7 @@ div.main{
   margin: 5px 5px 5px 0;
 }
 
-p.discount {
+p#discount {
   background-color: red;
   width: fit-content;
   padding: 5px 10px;
@@ -90,6 +90,7 @@ p.discount {
 .img-container {
   display: flex;
   justify-content: center;
+  min-width: 100%;
 }
 
 .article-entry.not-available .img-container #not-available {
@@ -98,6 +99,6 @@ p.discount {
   position: absolute;
 }
 
-.discount.hidden {
-  opacity: 0;
+.article-entry.not-available #discount.hidden {
+ opacity: 0;
 }

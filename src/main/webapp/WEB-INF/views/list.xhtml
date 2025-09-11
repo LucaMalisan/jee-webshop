@@ -20,7 +20,7 @@
                     <p class="medium-font" id="not-available"> Article not available </p>
                     <img class="article-image" src="#{articleBean.getPrimaryImageURL(article)}"/>
                 </div>
-                <p class="discount #{article.listPrice == null ? 'hidden' : ''}"><b> -#{articleBean.getDiscountPercent(article)}% </b></p>
+                <p id="discount" class="#{article.listPrice == null ? 'hidden' : ''}"><b> -#{articleBean.getDiscountPercent(article)}% </b></p>
                 <p class="small-font"> Category </p>
                 <p class="small-font"> #{articleBean.formatPrice(article)} </p>
                 <p class="medium-font"> #{article.title} </p>
