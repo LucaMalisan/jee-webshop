@@ -14,15 +14,15 @@
     </header>
     <h2>Article Overview</h2>
     <div class="main">
-        <ui:repeat value="#{articleBean.articles}" var="article">
+        <ui:repeat value="#{articleController.articles}" var="article">
             <div class="article-entry #{article.available ? 'available' : 'not-available'}">
                 <div class="img-container">
                     <p class="medium-font" id="not-available"> Article not available </p>
-                    <img class="article-image" src="#{articleBean.getPrimaryImageURL(article)}"/>
+                    <img class="article-image" src="#{article.getPrimaryImageURL()}"/>
                 </div>
-                <p id="discount" class="#{article.listPrice == null ? 'hidden' : ''}"><b> -#{articleBean.getDiscountPercent(article)}% </b></p>
+                <p id="discount" class="#{article.listPrice == null ? 'hidden' : ''}"><b> -#{article.getDiscountPercent()}% </b></p>
                 <p class="small-font"> Category </p>
-                <p class="small-font"> #{articleBean.formatPrice(article)} </p>
+                <p class="small-font"> #{article.formatPrice()} </p>
                 <p class="medium-font"> #{article.title} </p>
             </div>
         </ui:repeat>
