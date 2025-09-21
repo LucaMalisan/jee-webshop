@@ -48,12 +48,12 @@ div.main {
 }
 
 .article-entry {
+  width: auto;
   display: flex;
   flex-direction: column;
   padding: 35px;
   border-right: 1px solid #464444;
   border-bottom: 1px solid #464444;
-  width: fit-content;
 }
 
 .article-image {
@@ -99,6 +99,15 @@ p#discount {
   position: absolute;
 }
 
-.article-entry.not-available #discount.hidden {
- opacity: 0;
+.article-entry.not-available #discount.hidden, p#discount.hidden {
+  opacity: 0;
+}
+
+div.nav-buttons {
+  margin-top: 30px;
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }

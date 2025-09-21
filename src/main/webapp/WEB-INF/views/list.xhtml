@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html" xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:h="jakarta.faces.html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <h:head>
     <title> SwissTechOnline </title>
@@ -14,7 +14,7 @@
     </header>
     <h2>Article Overview</h2>
     <div class="main">
-        <ui:repeat value="#{articleController.articles}" var="article">
+        <ui:repeat value="#{articleController.getArticles(request)}" var="article">
             <div class="article-entry #{article.available ? 'available' : 'not-available'}">
                 <div class="img-container">
                     <p class="medium-font" id="not-available"> Article not available </p>
@@ -27,6 +27,46 @@
             </div>
         </ui:repeat>
     </div>
+    <div class="nav-buttons">
+        <c:choose>
+            <c:when test="#{!articleController.existsPreviousPage(request)}">
+                <button disabled="" onclick="changePage(false)">Previous</button>
+            </c:when>
+            <c:otherwise>
+                <button onclick="changePage(false)">Previous</button>
+            </c:otherwise>
+        </c:choose>
+
+        <ui:repeat value="#{articleController.getPageNumbers(request, 3)}" var="num">
+            <button onclick="setPage(this)" value="#{num}">#{num}</button>
+        </ui:repeat>
+        ...
+        <button value="#{articleController.totalPageCount}" onclick="setPage(this)">#{articleController.totalPageCount}</button>
+
+        <c:choose>
+            <c:when test="#{!articleController.existsNextPage(request)}">
+                <button onclick="changePage(true)" disabled="">Next</button>
+            </c:when>
+            <c:otherwise>
+                <button onclick="changePage(true)">Next</button>
+            </c:otherwise>
+        </c:choose>
+    </div>
 </h:body>
+
+<script>
+  function changePage(increase) {
+    let searchParams = new URLSearchParams(window.location.search);
+    let currentPage = searchParams.get("page") ?? "1";
+    searchParams.set("page", (parseInt(currentPage) + (increase ? 1 : -1) + ""));
+    location.assign(location.origin + location.pathname + "?" + searchParams.toString())
+  }
+
+  function setPage(element) {
+    let searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("page", element.value);
+    location.assign(location.origin + location.pathname + "?" + searchParams.toString())
+  }
+</script>
 </html>
 
