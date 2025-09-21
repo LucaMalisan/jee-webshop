@@ -9,7 +9,7 @@
     <link href="#{request.contextPath}/resources/css/main.css" rel="stylesheet"/>
 </h:head>
 <h:body>
-    <header>
+    <header class="header">
         <ui:include src="header.xhtml"/>
     </header>
     <h2>Article Overview</h2>
@@ -21,7 +21,7 @@
                     <img class="article-image" src="#{article.getPrimaryImageURL()}"/>
                 </div>
                 <p id="discount" class="#{article.listPrice == null ? 'hidden' : ''}"><b> -#{article.getDiscountPercent()}% </b></p>
-                <p class="small-font"> Category </p>
+                <p class="small-font"> #{article.category} </p>
                 <p class="small-font"> #{article.formatPrice()} </p>
                 <p class="medium-font"> #{article.title} </p>
             </div>

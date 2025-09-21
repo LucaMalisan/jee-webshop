@@ -38,9 +38,6 @@ public class ArticleController {
    */
   public List<Article> getArticles(HttpServletRequest request) {
     List<Article> articles = repository.getArticles();
-
-    // sorting after title to have a guaranteed order of elements
-    // articles.sort(Comparator.comparing(Article::getTitle));
     int page = this.getPageByRequest(request);
 
     return articles.subList(

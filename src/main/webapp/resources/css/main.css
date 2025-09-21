@@ -1,8 +1,17 @@
 @import "https://cdn.simplecss.org/simple.css";
 
-body {
+html > body {
   display: block;
-  padding: 50px;
+  padding: 10px 50px;
+}
+
+body > header > *:only-child.small-margin {
+  margin-block-start: 0;
+}
+
+body > header.header {
+  margin-top: 0;
+  padding: 0.5rem 2rem;
 }
 
 div.main {
@@ -13,6 +22,7 @@ div.main {
 .small-margin {
   margin-left: 10px;
   margin-right: 10px;
+  margin-top: 0;
 }
 
 .row-no-space, .row-small-space, .row-big-space {
@@ -47,13 +57,17 @@ div.main {
   flex: 1 2 auto;
 }
 
-.article-entry {
+div.article-entry {
   width: auto;
   display: flex;
   flex-direction: column;
   padding: 35px;
   border-right: 1px solid #464444;
   border-bottom: 1px solid #464444;
+}
+
+.article-entry:nth-child(3n) {
+  border-right: none;
 }
 
 .article-image {
