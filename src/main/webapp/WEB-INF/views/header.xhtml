@@ -1,9 +1,11 @@
-<div class="small-margin row-big-space">
+<div class="small-margin row-big-space" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
     <img src="#{request.contextPath}/resources/logo.png" class="logo" id="logo" />
 
     <div class="row-small-space low-height fill-up">
         <div class="row-no-space fill-up">
-            <select id="category-selection" />
+            <h:selectOneMenu id="category">
+                <f:selectItems value="#{categoryController.categories}"/>
+            </h:selectOneMenu>
             <input type="text" id="search" class="fill-up" />
         </div>
         <button type="submit"> Search </button>

@@ -14,18 +14,21 @@
     </header>
     <h2>Article Overview</h2>
     <div class="main">
-        <ui:repeat value="#{articleController.getArticles(request)}" var="article">
-            <div class="article-entry #{article.available ? 'available' : 'not-available'}">
-                <div class="img-container">
-                    <p class="medium-font" id="not-available"> Article not available </p>
-                    <img class="article-image" src="#{article.getPrimaryImageURL()}"/>
+        <ui:include src="sidebar.xhtml"/>
+        <div class="article-container">
+            <ui:repeat value="#{articleController.getArticles(request)}" var="article">
+                <div class="article-entry #{article.available ? 'available' : 'not-available'}">
+                    <div class="img-container">
+                        <p class="medium-font" id="not-available"> Article not available </p>
+                        <img class="article-image" src="#{article.getPrimaryImageURL()}"/>
+                    </div>
+                    <p id="discount" class="#{article.listPrice == null ? 'hidden' : ''}"><b> -#{article.getDiscountPercent()}% </b></p>
+                    <p class="small-font"> #{article.category} </p>
+                    <p class="small-font"> #{article.formatPrice()} </p>
+                    <p class="medium-font"> #{article.title} </p>
                 </div>
-                <p id="discount" class="#{article.listPrice == null ? 'hidden' : ''}"><b> -#{article.getDiscountPercent()}% </b></p>
-                <p class="small-font"> #{article.category} </p>
-                <p class="small-font"> #{article.formatPrice()} </p>
-                <p class="medium-font"> #{article.title} </p>
-            </div>
-        </ui:repeat>
+            </ui:repeat>
+        </div>
     </div>
     <div class="nav-buttons">
         <c:choose>

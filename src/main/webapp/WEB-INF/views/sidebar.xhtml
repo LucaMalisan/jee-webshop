@@ -1,0 +1,8 @@
+<div xmlns:ui="http://java.sun.com/jsf/facelets">
+    <p id="main-category">#{categoryController.getSelectedMainCategory(request)}</p>
+    <div>
+        <ui:repeat value="#{categoryController.getSubCategories(request)}" var="category">
+            <a href=""> #{category.getDescription()} </a>
+        </ui:repeat>
+    </div>
+</div>
