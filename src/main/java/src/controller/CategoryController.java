@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 import org.eclipse.krazo.lifecycle.RequestLifecycle;
 import src.model.Article;
 import src.model.Category;
+import src.model.Subcategory;
 import src.repository.ArticleRepository;
 import src.repository.CategoryRepository;
 
@@ -37,9 +38,8 @@ public class CategoryController {
         .orElse("");
   }
 
-  public Map<String, UUID> getSubCategories(HttpServletRequest request) {
+  public List<Subcategory> getSubcategories(HttpServletRequest request) {
     String categoryUuid = request.getParameter("categoryUuid");
-    return repository.getSubCategoriesByRootCategory().stream()
-            .collect(Collectors.toMap(Category::getCategoryName, Category::getUuid));
+    return repository.getSubcategoriesByRootCategoryUuid(categoryUuid);
   }
 }

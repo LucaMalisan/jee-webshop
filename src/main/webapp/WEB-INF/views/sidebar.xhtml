@@ -1,8 +1,8 @@
-<div xmlns:ui="http://java.sun.com/jsf/facelets">
-    <p id="main-category">#{categoryController.getSelectedMainCategory(request)}</p>
-    <div>
-        <ui:repeat value="#{categoryController.getSubCategories(request)}" var="category">
-            <a href=""> #{category.getDescription()} </a>
+<div id="sidebar" xmlns:ui="http://java.sun.com/jsf/facelets">
+    <p class="no-margin" href="" id="main-category">#{categoryController.getSelectedMainCategory(request)}</p>
+    <div id="subcategory-holder">
+        <ui:repeat value="#{categoryController.getSubcategories(request)}" var="category">
+            <a href=""> #{category.getCategoryName()} </a>
         </ui:repeat>
     </div>
 </div>
