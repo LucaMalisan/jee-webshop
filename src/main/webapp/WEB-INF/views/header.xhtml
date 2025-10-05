@@ -15,10 +15,13 @@
     <script>
       document.getElementById("submit").addEventListener("click", evt => {
         let value = document.getElementById("category").selectedOptions[0].value;
-        let searchParams = new URLSearchParams(window.location.search);
+        let pathWithoutParams = location.origin + location.pathname;
+
+        // ignore all previous filters
+        let searchParams = new URLSearchParams();
         searchParams.set("categoryUuid", value);
 
-        location.assign(location.origin + location.pathname + "?" + searchParams.toString())
+        location.assign(pathWithoutParams + "?" + searchParams.toString())
       });
 
       window.onload = () => {
