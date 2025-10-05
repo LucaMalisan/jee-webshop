@@ -2,6 +2,7 @@ package src.model;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,4 +22,7 @@ public class Subcategory implements Serializable {
 
   @Column(name = "category_name")
   private String categoryName;
+
+  @OneToMany(mappedBy = "subcategory")
+  private List<Article> articleList;
 }

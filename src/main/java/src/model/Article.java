@@ -4,12 +4,14 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@SuppressWarnings("unused")
 @Table(name = "article")
 public class Article implements Serializable {
 
@@ -32,8 +34,12 @@ public class Article implements Serializable {
   @Column(name = "available")
   private Boolean available;
 
-  @Column(name = "category")
-  private String category;
+  @Column(name = "category_name")
+  private UUID subcategoryUuid;
+
+  @ManyToOne
+  @JoinColumn(name = "category_name", insertable = false, updatable = false)
+  private Subcategory subcategory;
 
   @OneToMany(mappedBy = "article")
   private List<ArticleImage> imageList;

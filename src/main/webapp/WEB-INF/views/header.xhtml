@@ -20,5 +20,10 @@
 
         location.assign(location.origin + location.pathname + "?" + searchParams.toString())
       });
+
+      window.onload = () => {
+          let searchParams = new URLSearchParams(window.location.search);
+          document.getElementById("category").value = searchParams.get("categoryUuid")
+      }
     </script>
 </div>

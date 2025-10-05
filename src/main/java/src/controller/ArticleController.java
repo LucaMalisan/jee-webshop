@@ -4,6 +4,7 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -19,6 +20,8 @@ public class ArticleController {
   @Inject private ArticleRepository repository;
   @Inject private RequestLifecycle requestLifecycle;
 
+  private List<Article> articles;
+
   private static final double PAGE_SIZE = 12;
 
   /**
@@ -26,8 +29,9 @@ public class ArticleController {
    *
    * @return highest available page
    */
-  public int getTotalPageCount() {
-    return (int) Math.ceil(repository.getArticles().size() / PAGE_SIZE);
+  public int getTotalPageCount(HttpServletRequest request) {
+    List<Article> articles = getAllArticlesByRequest(request);
+    return (int) Math.ceil(articles.size() / PAGE_SIZE);
   }
 
   /**
@@ -36,9 +40,9 @@ public class ArticleController {
    * @param request: HttpServletRequest
    * @return result set of corresponding page
    */
-  public List<Article> getArticles(HttpServletRequest request) {
-    List<Article> articles = repository.getArticles();
+  public List<Article> getPagedArticles(HttpServletRequest request) {
     int page = this.getPageByRequest(request);
+    List<Article> articles = getAllArticlesByRequest(request);
 
     return articles.subList(
         this.calcSublistStartIndex(page), this.calcSublistEndIndex(page, articles.size()));
@@ -60,7 +64,7 @@ public class ArticleController {
 
     // highest number should have a distance of <count> to lowest number, but mustn't exceed total
     // page count
-    int highestNumber = Math.min(lowestNumber + count, this.getTotalPageCount());
+    int highestNumber = Math.min(lowestNumber + count, this.getTotalPageCount(request));
 
     return IntStream.range(highestNumber - count, highestNumber)
         .boxed()
@@ -72,7 +76,7 @@ public class ArticleController {
   }
 
   public boolean existsNextPage(HttpServletRequest request) {
-    return this.getPageByRequest(request) < this.getTotalPageCount();
+    return this.getPageByRequest(request) < this.getTotalPageCount(request);
   }
 
   /**
@@ -91,6 +95,17 @@ public class ArticleController {
 
     // return parsed page, but it must be at least 1
     return Math.max(page, 1);
+  }
+
+  private List<Article> getAllArticlesByRequest(HttpServletRequest request) {
+    String categoryUuid = request.getParameter("categoryUuid");
+
+    // if (articles == null) {
+    //   this.articles =
+    return categoryUuid != null ? repository.getArticles(categoryUuid) : new ArrayList<>();
+    //  }
+    //
+    //  return articles;
   }
 
   /**

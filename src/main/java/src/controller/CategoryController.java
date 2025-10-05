@@ -4,18 +4,13 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.eclipse.krazo.lifecycle.RequestLifecycle;
-import src.model.Article;
 import src.model.Category;
 import src.model.Subcategory;
-import src.repository.ArticleRepository;
 import src.repository.CategoryRepository;
 
 @Named
@@ -33,9 +28,12 @@ public class CategoryController {
 
   public String getSelectedMainCategory(HttpServletRequest request) {
     String categoryUuid = request.getParameter("categoryUuid");
-    return Optional.ofNullable(repository.findByUuid(categoryUuid))
-        .map(Category::getCategoryName)
-        .orElse("");
+
+    try {
+      return repository.findByUuid(categoryUuid).getCategoryName();
+    } catch (Exception e) {
+      return "";
+    }
   }
 
   public List<Subcategory> getSubcategories(HttpServletRequest request) {

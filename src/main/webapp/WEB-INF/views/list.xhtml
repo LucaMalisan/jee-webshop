@@ -16,14 +16,13 @@
     <div class="main">
         <ui:include src="sidebar.xhtml"/>
         <div class="article-container">
-            <ui:repeat value="#{articleController.getArticles(request)}" var="article">
+            <ui:repeat value="#{articleController.getPagedArticles(request)}" var="article">
                 <div class="article-entry #{article.available ? 'available' : 'not-available'}">
                     <div class="img-container">
                         <p class="medium-font" id="not-available"> Article not available </p>
                         <img class="article-image" src="#{article.getPrimaryImageURL()}"/>
                     </div>
                     <p id="discount" class="#{article.listPrice == null ? 'hidden' : ''}"><b> -#{article.getDiscountPercent()}% </b></p>
-                    <p class="small-font"> #{article.category} </p>
                     <p class="small-font"> #{article.formatPrice()} </p>
                     <p class="medium-font"> #{article.title} </p>
                 </div>
@@ -44,7 +43,7 @@
             <button onclick="setPage(this)" value="#{num}">#{num}</button>
         </ui:repeat>
         ...
-        <button value="#{articleController.totalPageCount}" onclick="setPage(this)">#{articleController.totalPageCount}</button>
+        <button value="#{articleController.getTotalPageCount(request)}" onclick="setPage(this)">#{articleController.getTotalPageCount(request)}</button>
 
         <c:choose>
             <c:when test="#{!articleController.existsNextPage(request)}">
