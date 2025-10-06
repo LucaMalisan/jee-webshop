@@ -12,6 +12,8 @@ import org.eclipse.krazo.lifecycle.RequestLifecycle;
 import src.model.Article;
 import src.repository.ArticleRepository;
 
+// TODO use PostConstruct
+
 @Named
 @RequestScoped
 @SuppressWarnings("unused")
@@ -98,13 +100,9 @@ public class ArticleController {
 
   private List<Article> getAllArticlesByRequest(HttpServletRequest request) {
     String categoryUuid = request.getParameter("categoryUuid");
+    String subcategoryUuid = request.getParameter("subcategoryUuid");
 
-    // if (articles == null) {
-    //   this.articles =
-    return categoryUuid != null ? repository.getArticles(categoryUuid) : new ArrayList<>();
-    //  }
-    //
-    //  return articles;
+    return repository.getArticles(categoryUuid, subcategoryUuid);
   }
 
   /**

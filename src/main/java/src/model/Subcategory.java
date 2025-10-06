@@ -18,11 +18,15 @@ public class Subcategory implements Serializable {
   private UUID uuid;
 
   @Column(name = "root_category")
-  private UUID rootCategory;
+  private UUID rootCategoryUuid;
 
   @Column(name = "category_name")
   private String categoryName;
 
   @OneToMany(mappedBy = "subcategory")
   private List<Article> articleList;
+
+  @ManyToOne
+  @JoinColumn(name = "root_category", insertable = false, updatable = false)
+  private Category rootCategory;
 }

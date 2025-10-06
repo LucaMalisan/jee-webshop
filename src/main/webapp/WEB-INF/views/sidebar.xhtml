@@ -2,7 +2,19 @@
     <p class="no-margin" href="" id="main-category">#{categoryController.getSelectedMainCategory(request)}</p>
     <div id="subcategory-holder">
         <ui:repeat value="#{categoryController.getSubcategories(request)}" var="category">
-            <a href=""> #{category.getCategoryName()} </a>
+            <p class="link" value="#{category.getUuid()}"> #{category.getCategoryName()} </p>
         </ui:repeat>
     </div>
+    <script>
+      document.querySelectorAll("p.link").forEach(e => e.addEventListener("click", evt => {
+        let value = evt.target.getAttribute("value");
+        let pathWithoutParams = location.origin + location.pathname;
+
+        // ignore all previous filters
+        let searchParams = new URLSearchParams();
+        searchParams.set("subcategoryUuid", value);
+
+        location.assign(pathWithoutParams + "?" + searchParams.toString())
+      }));
+    </script>
 </div>

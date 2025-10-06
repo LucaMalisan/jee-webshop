@@ -36,6 +36,21 @@ public class CategoryRepository {
     return query.getSingleResult();
   }
 
+  public Subcategory findSubcategoryByUuid(String uuidStr) {
+    UUID uuid;
+
+    try {
+      uuid = UUID.fromString(uuidStr);
+    } catch (Exception e) {
+      return null;
+    }
+
+    TypedQuery<Subcategory> query =
+            entitymanager.createQuery("SELECT a FROM Subcategory a WHERE a.uuid = ?1", Subcategory.class);
+    query.setParameter(1, uuid);
+    return query.getSingleResult();
+  }
+
   public List<Subcategory> getSubcategoriesByRootCategoryUuid(String uuidStr) {
     UUID uuid;
 
@@ -47,7 +62,7 @@ public class CategoryRepository {
 
     TypedQuery<Subcategory> query =
         entitymanager.createQuery(
-            "SELECT a FROM Subcategory a WHERE a.rootCategory = ?1", Subcategory.class);
+            "SELECT a FROM Subcategory a WHERE a.rootCategoryUuid = ?1", Subcategory.class);
     query.setParameter(1, uuid);
     return query.getResultList();
   }
