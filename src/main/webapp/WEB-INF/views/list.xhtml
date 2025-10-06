@@ -22,7 +22,7 @@
                         <p class="medium-font" id="not-available"> Article not available </p>
                         <img class="article-image" src="#{article.getPrimaryImageURL()}"/>
                     </div>
-                    <p id="discount" class="#{article.listPrice == null ? 'hidden' : ''}"><b> -#{article.getDiscountPercent()}% </b></p>
+                    <p id="discount" class="#{article.listPrice == null || !article.available ? 'hidden' : ''}"><b> -#{article.getDiscountPercent()}% </b></p>
                     <p class="small-font"> #{article.formatPrice()} </p>
                     <p class="medium-font"> #{article.title} </p>
                 </div>
@@ -43,7 +43,8 @@
             <button onclick="setPage(this)" value="#{num}">#{num}</button>
         </ui:repeat>
         ...
-        <button value="#{articleController.getTotalPageCount(request)}" onclick="setPage(this)">#{articleController.getTotalPageCount(request)}</button>
+        <ui:param name="totalPageCount" value="#{articleController.getTotalPageCount(request)}"/>
+        <button value="#{totalPageCount}" onclick="setPage(this)">#{totalPageCount}</button>
 
         <c:choose>
             <c:when test="#{!articleController.existsNextPage(request)}">

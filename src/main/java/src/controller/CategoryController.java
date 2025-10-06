@@ -32,21 +32,17 @@ public class CategoryController {
         .collect(Collectors.toMap(Category::getCategoryName, Category::getUuid));
   }
 
-  public String getSelectedMainCategory(HttpServletRequest request) {
+  public Category getSelectedMainCategory(HttpServletRequest request) {
     String subcategoryUuid = request.getParameter("subcategoryUuid");
-
-    if (!StringUtils.isEmpty(subcategoryUuid)) {
-      return Optional.ofNullable(repository.findSubcategoryByUuid(subcategoryUuid))
-          .map(Subcategory::getRootCategory)
-          .map(Category::getCategoryName)
-          .orElse("");
-    }
-
     String categoryUuid = request.getParameter("categoryUuid");
 
-    return Optional.ofNullable(repository.findByUuid(categoryUuid))
-        .map(Category::getCategoryName)
-        .orElse("");
+    if (!StringUtils.isEmpty(subcategoryUuid)) {
+      return repository.findSubcategoryByUuid(subcategoryUuid).getRootCategory();
+    } else if (!StringUtils.isEmpty(categoryUuid)) {
+      return repository.findByUuid(categoryUuid);
+    } else {
+      return null;
+    }
   }
 
   public List<Subcategory> getSubcategories(HttpServletRequest request) {

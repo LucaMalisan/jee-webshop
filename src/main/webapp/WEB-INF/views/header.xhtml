@@ -3,7 +3,7 @@
 
     <div class="row-small-space low-height fill-up">
         <div class="row-no-space fill-up">
-            <h:selectOneMenu id="category">
+            <h:selectOneMenu id="category" value="#{categoryController.getSelectedMainCategory(request).getUuid().toString()}">
                 <f:selectItems value="#{categoryController.categories}"/>
             </h:selectOneMenu>
             <input type="text" id="search" class="fill-up"/>
@@ -24,9 +24,9 @@
         location.assign(pathWithoutParams + "?" + searchParams.toString())
       });
 
-      window.onload = () => {
-          let searchParams = new URLSearchParams(window.location.search);
-          document.getElementById("category").value = searchParams.get("categoryUuid")
-      }
+     // window.onload = () => {
+     //     let searchParams = new URLSearchParams(window.location.search);
+     //     document.getElementById("category").value = searchParams.get("categoryUuid")
+     // }
     </script>
 </div>

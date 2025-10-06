@@ -53,7 +53,7 @@ public class Article implements Serializable {
   }
 
   public String formatPrice() {
-    if (this.getListPrice() != null) {
+    if (this.getListPrice() != null && this.available) {
       return String.format("%.2f was %.2f CHF", this.getSellingPrice(), this.getListPrice());
     }
     return String.format("%.2f CHF", this.getSellingPrice());

@@ -1,10 +1,18 @@
-<div id="sidebar" xmlns:ui="http://java.sun.com/jsf/facelets">
-    <p class="no-margin" href="" id="main-category">#{categoryController.getSelectedMainCategory(request)}</p>
-    <div id="subcategory-holder">
-        <ui:repeat value="#{categoryController.getSubcategories(request)}" var="category">
-            <p class="link" value="#{category.getUuid()}"> #{category.getCategoryName()} </p>
-        </ui:repeat>
-    </div>
+<div id="sidebar" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <c:choose>
+        <c:when test="#{categoryController.getSelectedMainCategory(request) != null}">
+            <p class="link" value="#{categoryController.getSelectedMainCategory(request).getUuid()}" id="main-category">
+                #{categoryController.getSelectedMainCategory(request).getCategoryName()}
+            </p>
+            <div id="subcategory-holder">
+                <ui:repeat value="#{categoryController.getSubcategories(request)}" var="category">
+                    <p class="link" value="#{category.getUuid()}"> #{category.getCategoryName()} </p>
+                </ui:repeat>
+            </div>
+        </c:when>
+    </c:choose>
+
     <script>
       document.querySelectorAll("p.link").forEach(e => e.addEventListener("click", evt => {
         let value = evt.target.getAttribute("value");
@@ -12,7 +20,7 @@
 
         // ignore all previous filters
         let searchParams = new URLSearchParams();
-        searchParams.set("subcategoryUuid", value);
+        searchParams.set(evt.target.id === "main-category" ? "categoryUuid" : "subcategoryUuid", value);
 
         location.assign(pathWithoutParams + "?" + searchParams.toString())
       }));

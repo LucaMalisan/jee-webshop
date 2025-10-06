@@ -139,7 +139,6 @@ div.nav-buttons {
 div#subcategory-holder {
   display: flex;
   flex-direction: column;
-  width: max-content;
   margin-left: 20px;
 }
 
@@ -151,4 +150,5 @@ p.link {
   margin: 0;
   text-decoration: underline;
   cursor: pointer;
+  text-wrap: nowrap;
 }
