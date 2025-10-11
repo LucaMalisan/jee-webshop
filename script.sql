@@ -24,7 +24,7 @@ CREATE TABLE article
     sellingPrice FLOAT,
     listPrice    FLOAT,
     available    BOOLEAN,
-    category_name      uuid REFERENCES subcategory(uuid)
+    subcategory_uuid      uuid REFERENCES subcategory(uuid)
 );
 
 CREATE TABLE article_image

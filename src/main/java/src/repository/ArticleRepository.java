@@ -20,20 +20,23 @@ public class ArticleRepository {
 
     if (StringUtils.isEmpty(categoryUuidStr) && StringUtils.isEmpty(subcategoryUuidStr)) {
       query = entitymanager.createQuery("SELECT a FROM Article a", Article.class);
-    } else if (StringUtils.isEmpty(categoryUuidStr)) {
+      return query.getResultList();
+    }
+
+    if (!StringUtils.isEmpty(subcategoryUuidStr)) {
       UUID subcategoryUuid = UUID.fromString(subcategoryUuidStr);
       query =
           entitymanager.createQuery(
               "SELECT a FROM Article a WHERE a.subcategoryUuid = ?1", Article.class);
       query.setParameter(1, subcategoryUuid);
-    } else {
-      UUID categoryUuid = UUID.fromString(categoryUuidStr);
-      query =
-          entitymanager.createQuery(
-              "SELECT a FROM Article a WHERE a.subcategory.rootCategoryUuid = ?1", Article.class);
-      query.setParameter(1, categoryUuid);
+      return query.getResultList();
     }
 
+    UUID categoryUuid = UUID.fromString(categoryUuidStr);
+    query =
+        entitymanager.createQuery(
+            "SELECT a FROM Article a WHERE a.subcategory.rootCategoryUuid = ?1", Article.class);
+    query.setParameter(1, categoryUuid);
     return query.getResultList();
   }
 }

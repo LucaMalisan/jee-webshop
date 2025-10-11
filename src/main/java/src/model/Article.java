@@ -34,11 +34,11 @@ public class Article implements Serializable {
   @Column(name = "available")
   private Boolean available;
 
-  @Column(name = "category_name")
+  @Column(name = "subcategory_uuid")
   private UUID subcategoryUuid;
 
   @ManyToOne
-  @JoinColumn(name = "category_name", insertable = false, updatable = false)
+  @JoinColumn(name = "subcategory_uuid", insertable = false, updatable = false)
   private Subcategory subcategory;
 
   @OneToMany(mappedBy = "article")

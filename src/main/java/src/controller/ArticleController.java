@@ -4,7 +4,7 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
