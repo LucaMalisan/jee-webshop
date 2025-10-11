@@ -39,6 +39,8 @@
             </c:otherwise>
         </c:choose>
 
+        <button value="#{1}" onclick="setPage(this)">1</button>
+        ...
         <ui:repeat value="#{articleController.getPageNumbers(request, 3)}" var="num">
             <button onclick="setPage(this)" value="#{num}">#{num}</button>
         </ui:repeat>

@@ -61,13 +61,12 @@ public class ArticleController {
   public List<Integer> getPageNumbers(HttpServletRequest request, int count) {
     int page = this.getPageByRequest(request);
 
-    // lowest page number should be one smaller than current page
+    // lowest page number must at least be 2
+    int lowestNumber = Math.max(2, page - 1);
+
     // highest number should have a distance of <count> to lowest number, but mustn't exceed total
     // page count
-    int highestNumber = Math.min(page - 1 + count, this.getTotalPageCount(request));
-
-    // lowest page number must at least be 1
-    int lowestNumber = Math.max(1, highestNumber - count);
+    int highestNumber = Math.min(lowestNumber + count, this.getTotalPageCount(request));
 
     return IntStream.range(lowestNumber, highestNumber).boxed().collect(Collectors.toList());
   }
