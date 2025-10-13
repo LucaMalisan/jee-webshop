@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,9 +18,8 @@ import lombok.Setter;
 public class ArticleImage {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "uuid", updatable = false, nullable = false)
-  private UUID uuid;
+  private String uuid;
 
   @Column(name = "article_sku")
   private long articleSku;

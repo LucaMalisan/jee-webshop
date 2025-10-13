@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,7 +34,7 @@ public class Article implements Serializable {
   private Boolean available;
 
   @Column(name = "subcategory_uuid")
-  private UUID subcategoryUuid;
+  private String subcategoryUuid;
 
   @ManyToOne
   @JoinColumn(name = "subcategory_uuid", insertable = false, updatable = false)

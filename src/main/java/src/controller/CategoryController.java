@@ -4,12 +4,9 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 import org.eclipse.krazo.lifecycle.RequestLifecycle;
@@ -27,7 +24,7 @@ public class CategoryController {
   @Inject private CategoryRepository repository;
   @Inject private RequestLifecycle requestLifecycle;
 
-  public Map<String, UUID> getCategories() {
+  public Map<String, String> getCategories() {
     return repository.getCategories().stream()
         .collect(Collectors.toMap(Category::getCategoryName, Category::getUuid));
   }

@@ -100,8 +100,9 @@ public class ArticleController {
   private List<Article> getAllArticlesByRequest(HttpServletRequest request) {
     String categoryUuid = request.getParameter("categoryUuid");
     String subcategoryUuid = request.getParameter("subcategoryUuid");
+    String query = request.getParameter("query");
 
-    return repository.getArticles(categoryUuid, subcategoryUuid);
+    return repository.getArticles(categoryUuid, subcategoryUuid, query);
   }
 
   /**

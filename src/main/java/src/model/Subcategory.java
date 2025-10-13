@@ -3,7 +3,6 @@ package src.model;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,10 +14,10 @@ public class Subcategory implements Serializable {
 
   @Id
   @Column(name = "uuid", updatable = false, nullable = false)
-  private UUID uuid;
+  private String uuid;
 
-  @Column(name = "root_category")
-  private UUID rootCategoryUuid;
+  @Column(name = "root_category_uuid")
+  private String rootCategoryUuid;
 
   @Column(name = "category_name")
   private String categoryName;
@@ -27,6 +26,6 @@ public class Subcategory implements Serializable {
   private List<Article> articleList;
 
   @ManyToOne
-  @JoinColumn(name = "root_category", insertable = false, updatable = false)
+  @JoinColumn(name = "root_category_uuid", insertable = false, updatable = false)
   private Category rootCategory;
 }

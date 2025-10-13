@@ -2,13 +2,11 @@
     <img src="#{request.contextPath}/resources/logo.png" class="logo" id="logo"/>
 
     <div class="row-small-space low-height fill-up">
-        <div class="row-no-space fill-up">
-            <h:selectOneMenu id="category" value="#{categoryController.getSelectedMainCategory(request).getUuid().toString()}">
-                <f:selectItem itemValue="" itemLabel="All Categories" />
-                <f:selectItems value="#{categoryController.categories}"/>
-            </h:selectOneMenu>
-            <input type="text" id="search" class="fill-up"/>
-        </div>
+        <h:selectOneMenu id="category" value="#{categoryController.getSelectedMainCategory(request).getUuid().toString()}">
+            <f:selectItem itemValue="" itemLabel="All Categories"/>
+            <f:selectItems value="#{categoryController.categories}"/>
+        </h:selectOneMenu>
+        <input type="text" id="search" class="fill-up" value="#{request.getParameter('query')}"/>
         <button type="submit" id="submit"> Search</button>
     </div>
     <a href="" id="go-to-cart"><span class="material-symbols-outlined big-icon">shopping_cart</span></a>
@@ -16,18 +14,17 @@
     <script>
       document.getElementById("submit").addEventListener("click", evt => {
         let value = document.getElementById("category").selectedOptions[0].value;
+        let query = document.getElementById("search").value;
         let pathWithoutParams = location.origin + location.pathname;
 
-        // ignore all previous filters
-        let searchParams = new URLSearchParams();
+        let searchParams = new URLSearchParams(location.search);
         searchParams.set("categoryUuid", value);
+        searchParams.set("query", query);
+        searchParams.set("page", "1");
 
         location.assign(pathWithoutParams + "?" + searchParams.toString())
       });
 
-     // window.onload = () => {
-     //     let searchParams = new URLSearchParams(window.location.search);
-     //     document.getElementById("category").value = searchParams.get("categoryUuid")
-     // }
+
     </script>
 </div>
