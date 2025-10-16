@@ -15,14 +15,14 @@
 
     <script>
       document.querySelectorAll("p.link").forEach(e => e.addEventListener("click", evt => {
-        let value = evt.target.getAttribute("value");
-        let pathWithoutParams = location.origin + location.pathname;
+          let value = evt.target.getAttribute("value");
+          if(evt.target.id === "main-category") {
+              document.getElementById("category").value = value;
+          } else {
+              document.getElementById("subcategory").value = value;
+          }
 
-        // ignore all previous filters
-        let searchParams = new URLSearchParams();
-        searchParams.set(evt.target.id === "main-category" ? "categoryUuid" : "subcategoryUuid", value);
-
-        location.assign(pathWithoutParams + "?" + searchParams.toString())
+          document.getElementById("submit").click();
       }));
     </script>
 </div>

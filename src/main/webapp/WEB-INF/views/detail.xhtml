@@ -20,6 +20,7 @@
     <div class="main">
         <ui:include src="sidebar.xhtml"/>
         <div class="column">
+            <p class="link" id="return" onclick="returnToList()">Return</p>
             <h2>Detail overview</h2>
             <div class="detail-container">
                 <div class="column">
@@ -27,14 +28,7 @@
                         <img id="big-image" src="#{articleController.articleDetail.getPrimaryImageURL()}" alt="selected-article-image"/>
                         <div id="image-carousel">
                             <ui:repeat value="#{articleController.articleDetail.imageList}" var="image" varStatus="i">
-                                <c:choose>
-                                    <c:when test="#{i == 0}">
-                                        <img src="#{image.imageURL}" alt="product-image" class="selected" onclick="setBigImage(this)"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <img src="#{image.imageURL}" alt="product-image" onclick="setBigImage(this)"/>
-                                    </c:otherwise>
-                                </c:choose>
+                                <img src="#{image.imageURL}" alt="product-image" onclick="setBigImage(this)"/>
                             </ui:repeat>
                         </div>
                     </div>
@@ -47,7 +41,7 @@
                         </div>
                         <p class="medium-font"> #{articleController.articleDetail.title} </p>
                         <p id="description">#{articleController.articleDetail.description}</p>
-                        <p id="stock"><i>5 pieces in stock</i></p>
+                        <p id="stock"><i>#{articleController.articleDetail.stock} pieces in stock</i></p>
                         <div class="cart">
                             <input type="number" id="cart-amount" placeholder="Quantity"/>
                             <button id="add-to-cart">
@@ -64,9 +58,15 @@
 <script>
   function setBigImage(element) {
     document.getElementById("big-image").src = element.src;
-    document.getElementById("image-carousel").querySelectorAll("image").forEach(e => e.classList.remove("selected"));
+    document.getElementById("image-carousel").querySelectorAll("img").forEach(e => e.classList.remove("selected"));
     element.classList.add("selected");
   }
+
+  function returnToList() {
+    document.getElementById('submit').click();
+  }
+
+  document.addEventListener("DOMContentLoaded", () => setBigImage(document.getElementById("image-carousel").firstElementChild))
 </script>
 </html>
 

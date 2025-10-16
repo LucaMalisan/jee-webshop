@@ -77,7 +77,7 @@
 
   function openDetail(element) {
     let sku = element.getAttribute("sku");
-    location.href = location.href + "/detail?sku=" + sku;
+    location.href = location.origin + location.pathname + "/detail?sku=" + sku;
   }
 </script>
 </html>

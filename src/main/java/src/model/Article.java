@@ -33,6 +33,9 @@ public class Article implements Serializable {
   @Column(name = "available")
   private Boolean available;
 
+  @Column(name = "stock")
+  private int stock;
+
   @Column(name = "subcategory_uuid")
   private String subcategoryUuid;
 

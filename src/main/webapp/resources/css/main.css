@@ -13,6 +13,7 @@ body > header > *:only-child.small-margin {
 body > header.header {
   margin-top: 0;
   padding: 0.5rem 2rem;
+  margin-bottom: 50px;
 }
 
 div.main {
@@ -161,4 +162,8 @@ button{
   flex-direction: row;
   align-items: center;
   gap: 10px;
+}
+
+.hidden {
+  display: none;
 }

@@ -48,7 +48,7 @@ public class ArticleRepository {
     return q.getResultList();
   }
 
-  public Article findBySku(int sku) {
+  public Article findBySku(long sku) {
     TypedQuery<Article> query =
         entitymanager.createQuery("SELECT a FROM Article a WHERE a.sku = ?1", Article.class);
     query.setParameter("1", sku);

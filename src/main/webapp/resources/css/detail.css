@@ -30,7 +30,7 @@ div#image-carousel {
 }
 
 div#image-carousel img {
-  width: 90px;
+  height: 100px;
   cursor: pointer;
 }
 
@@ -48,4 +48,8 @@ div.cart {
   display: flex;
   flex-direction: row;
   gap: 20px;
+}
+
+img.selected {
+  border: 4px solid var(--accent);
 }

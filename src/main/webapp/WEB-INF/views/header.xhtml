@@ -6,25 +6,40 @@
             <f:selectItem itemValue="" itemLabel="All Categories"/>
             <f:selectItems value="#{categoryController.categories}"/>
         </h:selectOneMenu>
+        <input type="text" id="subcategory" class="hidden" value="#{request.getParameter('subcategoryUuid')}"/>
         <input type="text" id="search" class="fill-up" value="#{request.getParameter('query')}"/>
-        <button type="submit" id="submit"> Search</button>
+        <button type="submit" id="submit" redirectTo="#{request.contextPath}/application"> Search</button>
     </div>
     <a href="" id="go-to-cart"><span class="material-symbols-outlined big-icon">shopping_cart</span></a>
 
     <script>
+
+      document.addEventListener("DOMContentLoaded", () => {
+        let cachedFilter = sessionStorage.getItem("filter");
+        if (cachedFilter) {
+          let json = JSON.parse(cachedFilter)
+
+          for (let key in json) {
+            document.getElementById(key).value = json[key];
+          }
+        }
+      })
+
       document.getElementById("submit").addEventListener("click", evt => {
         let value = document.getElementById("category").selectedOptions[0].value;
+        let subcategory = document.getElementById("subcategory");
         let query = document.getElementById("search").value;
-        let pathWithoutParams = location.origin + location.pathname;
 
-        let searchParams = new URLSearchParams(location.search);
+        let searchParams = new URLSearchParams();
+        searchParams.set("subcategoryUuid", subcategory.value);
         searchParams.set("categoryUuid", value);
         searchParams.set("query", query);
         searchParams.set("page", "1");
 
-        location.assign(pathWithoutParams + "?" + searchParams.toString())
-      });
+        sessionStorage.setItem("filter", JSON.stringify({category: value, search: query}))
 
+        location.assign(evt.target.getAttribute("redirectTo") + "?" + searchParams.toString())
+      });
 
     </script>
 </div>

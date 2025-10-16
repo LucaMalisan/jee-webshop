@@ -82,7 +82,7 @@ public class ArticleController {
   }
 
   public void setArticleDetail(HttpServletRequest request) {
-    int sku = Integer.parseInt(request.getParameter("sku"));
+    long sku = Long.parseLong(request.getParameter("sku"));
     this.articleDetail = repository.findBySku(sku);
   }
 
