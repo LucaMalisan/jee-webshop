@@ -2,27 +2,28 @@
 
     <c:choose>
         <c:when test="#{categoryController.getSelectedMainCategory(request) != null}">
-            <p class="link" value="#{categoryController.getSelectedMainCategory(request).getUuid()}" id="main-category">
+            <p class="link" value="#{categoryController.getSelectedMainCategory(request).getUuid()}" id="main-category" onclick="returnToMainCategory(this)">
                 #{categoryController.getSelectedMainCategory(request).getCategoryName()}
             </p>
             <div id="subcategory-holder">
                 <ui:repeat value="#{categoryController.getSubcategories(request)}" var="category">
-                    <p class="link" value="#{category.getUuid()}"> #{category.getCategoryName()} </p>
+                    <p class="link" value="#{category.getUuid()}" onclick="goToSubCategory(this)"> #{category.getCategoryName()} </p>
                 </ui:repeat>
             </div>
         </c:when>
     </c:choose>
 
     <script>
-      document.querySelectorAll("p.link").forEach(e => e.addEventListener("click", evt => {
-          let value = evt.target.getAttribute("value");
-          if(evt.target.id === "main-category") {
-              document.getElementById("category").value = value;
-          } else {
-              document.getElementById("subcategory").value = value;
-          }
+        document.querySelectorAll("p.link").forEach(e => e.addEventListener("click", evt => {
+            let value = evt.target.getAttribute("value");
+            let pathWithoutParams = location.origin + location.pathname;
 
-          document.getElementById("submit").click();
-      }));
+            // ignore all previous filters
+            let searchParams = new URLSearchParams();
+            searchParams.set(evt.target.id === "main-category" ? "categoryUuid" : "subcategoryUuid", value);
+
+            location.assign(pathWithoutParams + "?" + searchParams.toString())
+        }));
+
     </script>
 </div>

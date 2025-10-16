@@ -63,7 +63,7 @@
   }
 
   function returnToList() {
-    document.getElementById('submit').click();
+    location.href = sessionStorage.getItem("main-page");
   }
 
   document.addEventListener("DOMContentLoaded", () => setBigImage(document.getElementById("image-carousel").firstElementChild))

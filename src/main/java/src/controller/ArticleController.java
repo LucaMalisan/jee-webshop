@@ -131,6 +131,6 @@ public class ArticleController {
    * @return endIndex for sublist based on page size
    */
   private int calcSublistEndIndex(int page, int totalListSize) {
-    return (int) (Math.min(totalListSize - 1, page * PAGE_SIZE));
+    return (int) (Math.min(totalListSize, page * PAGE_SIZE));
   }
 }

@@ -45,6 +45,7 @@ public class ArticleRepository {
 
     cq = cq.where(predicates.toArray(new Predicate[0]));
     TypedQuery<Article> q = entitymanager.createQuery(cq);
+
     return q.getResultList();
   }
 
