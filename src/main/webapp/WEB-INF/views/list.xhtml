@@ -12,21 +12,23 @@
     <header class="header">
         <ui:include src="header.xhtml"/>
     </header>
-    <h2>Article Overview</h2>
     <div class="main">
         <ui:include src="sidebar.xhtml"/>
-        <div class="article-container">
-            <ui:repeat value="#{articleController.getPagedArticles(request)}" var="article">
-                <div class="article-entry #{article.available ? 'available' : 'not-available'}">
-                    <div class="img-container">
-                        <p class="medium-font" id="not-available"> Article not available </p>
-                        <img class="article-image" src="#{article.getPrimaryImageURL()}"/>
+        <div class="column">
+            <h2>Article Overview</h2>
+            <div class="article-container">
+                <ui:repeat value="#{articleController.getPagedArticles(request)}" var="article">
+                    <div sku="#{article.sku}" class="article-entry #{article.available ? 'available' : 'not-available'}" onclick="openDetail(this)">
+                        <div class="img-container">
+                            <p class="medium-font" id="not-available"> Article not available </p>
+                            <img class="article-image" src="#{article.getPrimaryImageURL()}"/>
+                        </div>
+                        <p id="discount" class="#{article.listPrice == null || !article.available ? 'hidden' : ''}"><b> -#{article.getDiscountPercent()}% </b></p>
+                        <p class="small-font"> #{article.formatPrice()} </p>
+                        <p class="medium-font"> #{article.title} </p>
                     </div>
-                    <p id="discount" class="#{article.listPrice == null || !article.available ? 'hidden' : ''}"><b> -#{article.getDiscountPercent()}% </b></p>
-                    <p class="small-font"> #{article.formatPrice()} </p>
-                    <p class="medium-font"> #{article.title} </p>
-                </div>
-            </ui:repeat>
+                </ui:repeat>
+            </div>
         </div>
     </div>
     <div class="nav-buttons">
@@ -71,6 +73,11 @@
     let searchParams = new URLSearchParams(window.location.search);
     searchParams.set("page", element.value);
     location.assign(location.origin + location.pathname + "?" + searchParams.toString())
+  }
+
+  function openDetail(element) {
+    let sku = element.getAttribute("sku");
+    location.href = location.href + "/detail?sku=" + sku;
   }
 </script>
 </html>

@@ -16,4 +16,10 @@ public class ServletController {
   public String index() {
     return "list.xhtml";
   }
+
+  @GET
+  @Path("/detail")
+  public String detail() {
+    return "detail.xhtml";
+  }
 }

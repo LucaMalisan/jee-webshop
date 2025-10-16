@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import lombok.Getter;
 import org.eclipse.krazo.lifecycle.RequestLifecycle;
 import src.model.Article;
 import src.repository.ArticleRepository;
@@ -22,8 +23,9 @@ public class ArticleController {
   @Inject private ArticleRepository repository;
   @Inject private RequestLifecycle requestLifecycle;
 
+  @Getter
+  private Article articleDetail;
   private List<Article> articles;
-
   private static final double PAGE_SIZE = 12;
 
   /**
@@ -79,7 +81,12 @@ public class ArticleController {
     return this.getPageByRequest(request) < this.getTotalPageCount(request);
   }
 
-  /**
+  public void setArticleDetail(HttpServletRequest request) {
+    int sku = Integer.parseInt(request.getParameter("sku"));
+    this.articleDetail = repository.findBySku(sku);
+  }
+
+    /**
    * Parse page out of request and fix invalid values
    *
    * @param request: HttpServletRequest
@@ -124,6 +131,6 @@ public class ArticleController {
    * @return endIndex for sublist based on page size
    */
   private int calcSublistEndIndex(int page, int totalListSize) {
-    return (int) (Math.min(totalListSize, page * PAGE_SIZE));
+    return (int) (Math.min(totalListSize - 1, page * PAGE_SIZE));
   }
 }

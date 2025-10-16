@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f=" " xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+    <title> SwissTechOnline </title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+    <link href="#{request.contextPath}/resources/css/main.css" rel="stylesheet"/>
+</h:head>
+<h:body>
+    <header class="header">
+        <ui:include src="header.xhtml"/>
+    </header>
+
+    <f:metadata>
+        <f:viewAction action="#{articleController.setArticleDetail(request)}"/>
+    </f:metadata>
+
+    <div class="main">
+        <ui:include src="sidebar.xhtml"/>
+        <div class="column">
+            <h2>Detail overview</h2>
+            <div class="detail-container">
+                <div class="column">
+                    <div class="image-container">
+                        <img id="big-image" src="#{articleController.articleDetail.getPrimaryImageURL()}" alt="selected-article-image"/>
+                        <div id="image-carousel">
+                            <ui:repeat value="#{articleController.articleDetail.imageList}" var="image" varStatus="i">
+                                <c:choose>
+                                    <c:when test="#{i == 0}">
+                                        <img src="#{image.imageURL}" alt="product-image" class="selected" onclick="setBigImage(this)"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="#{image.imageURL}" alt="product-image" onclick="setBigImage(this)"/>
+                                    </c:otherwise>
+                                </c:choose>
+                            </ui:repeat>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="article-information">
+                        <div>
+                            <p id="discount" class="#{articleController.articleDetail.listPrice == null || !articleController.articleDetail.available ? 'hidden' : ''}"><b> -#{articleController.articleDetail.getDiscountPercent()}% </b></p>
+                            <p class="small-font"> #{articleController.articleDetail.formatPrice()} </p>
+                        </div>
+                        <p class="medium-font"> #{articleController.articleDetail.title} </p>
+                        <p id="description">#{articleController.articleDetail.description}</p>
+                        <p id="stock"><i>5 pieces in stock</i></p>
+                        <div class="cart">
+                            <input type="number" id="cart-amount" placeholder="Quantity"/>
+                            <button id="add-to-cart">
+                                <span class="material-symbols-outlined">shopping_cart</span>
+                                <div>Add to cart</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+<script>
+  function setBigImage(element) {
+    document.getElementById("big-image").src = element.src;
+    document.getElementById("image-carousel").querySelectorAll("image").forEach(e => e.classList.remove("selected"));
+    element.classList.add("selected");
+  }
+</script>
+</html>
+

@@ -1,0 +1,51 @@
+div.detail-container {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  padding: 60px;
+}
+
+div.column {
+  display: flex;
+  flex-direction: column;
+}
+
+div.image-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  width: 30vw;
+}
+
+#big-image {
+  height: 60vh;
+}
+
+div#image-carousel {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 10px;
+}
+
+div#image-carousel img {
+  width: 90px;
+  cursor: pointer;
+}
+
+div.article-information{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+div.article-information p {
+  margin: 5px 5px 5px 0;
+}
+
+div.cart {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
