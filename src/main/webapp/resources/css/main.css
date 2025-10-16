@@ -130,6 +130,10 @@ p#discount {
   opacity: 0;
 }
 
+.article-entry.not-available {
+  cursor: not-allowed;
+}
+
 div.nav-buttons {
   margin-top: 30px;
   width: 100%;

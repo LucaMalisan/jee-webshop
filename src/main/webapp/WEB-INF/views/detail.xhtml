@@ -66,7 +66,14 @@
     location.href = sessionStorage.getItem("main-page");
   }
 
-  document.addEventListener("DOMContentLoaded", () => setBigImage(document.getElementById("image-carousel").firstElementChild))
+  document.addEventListener("DOMContentLoaded", () => {
+      setBigImage(document.getElementById("image-carousel").firstElementChild);
+
+      // fill header with cached values
+      let filterValue = new URLSearchParams(new URL(sessionStorage.getItem("main-page")).search);
+      document.getElementById("category").value = filterValue.get("categoryUuid");
+      document.getElementById("search").value = filterValue.get("query");
+  })
 </script>
 </html>
 

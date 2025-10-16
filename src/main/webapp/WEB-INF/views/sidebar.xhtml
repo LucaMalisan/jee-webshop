@@ -14,16 +14,22 @@
     </c:choose>
 
     <script>
-        document.querySelectorAll("p.link").forEach(e => e.addEventListener("click", evt => {
-            let value = evt.target.getAttribute("value");
-            let pathWithoutParams = location.origin + location.pathname;
+      document.querySelectorAll("p.link").forEach(e => e.addEventListener("click", evt => {
+        let value = evt.target.getAttribute("value");
+        let pathWithoutParams = location.origin + location.pathname;
 
-            // ignore all previous filters
-            let searchParams = new URLSearchParams();
-            searchParams.set(evt.target.id === "main-category" ? "categoryUuid" : "subcategoryUuid", value);
+        // ignore all previous filters
+        let searchParams = new URLSearchParams(location.search);
 
-            location.assign(pathWithoutParams + "?" + searchParams.toString())
-        }));
+        if (evt.target.id === "main-category") {
+          searchParams.delete("subcategoryUuid");
+          searchParams.set("categoryUuid", value);
+        } else {
+          searchParams.set("subcategoryUuid", value);
+        }
+
+        location.assign(pathWithoutParams + "?" + searchParams.toString())
+      }));
 
     </script>
 </div>

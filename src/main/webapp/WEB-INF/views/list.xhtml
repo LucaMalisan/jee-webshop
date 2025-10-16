@@ -76,9 +76,11 @@
   }
 
   function openDetail(element) {
-    let sku = element.getAttribute("sku");
-    sessionStorage.setItem("main-page", location.href)
-    location.href = location.origin + location.pathname + "/detail?sku=" + sku;
+    if (!element.classList.contains("not-available")) {
+      let sku = element.getAttribute("sku");
+      sessionStorage.setItem("main-page", location.href)
+      location.href = location.origin + location.pathname + "/detail?sku=" + sku;
+    }
   }
 </script>
 </html>
