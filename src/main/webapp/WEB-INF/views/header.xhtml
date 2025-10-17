@@ -1,4 +1,4 @@
-<div class="small-margin row-big-space" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+<div class="small-margin row-big-space" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core">
     <img src="#{request.contextPath}/resources/logo.png" class="logo" id="logo"/>
 
     <div class="row-small-space low-height fill-up">
@@ -9,6 +9,9 @@
         <input type="text" id="search" class="fill-up" value="#{request.getParameter('query')}"/>
         <button type="submit" id="submit" redirectTo="#{request.contextPath}/application"> Search</button>
     </div>
+    <a href="#{request.contextPath}/application/login" id="user">
+        <span class="material-symbols-outlined">person</span>
+    </a>
     <a href="" id="go-to-cart"><span class="material-symbols-outlined big-icon">shopping_cart</span></a>
 
     <script>

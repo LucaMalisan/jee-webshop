@@ -1,11 +1,19 @@
 package src.controller;
 
 import com.auth0.AuthenticationController;
+import com.auth0.IdentityVerificationException;
+import com.auth0.Tokens;
+import com.auth0.json.auth.UserInfo;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import io.github.cromat.JavaxRequest;
 import io.github.cromat.JavaxResponse;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.json.JsonObject;
 import jakarta.mvc.Controller;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -13,9 +21,9 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 import lombok.extern.java.Log;
 import src.auth.Auth0AuthenticationConfig;
 
@@ -65,8 +73,18 @@ public class ServletController {
 
   @GET
   @Path("/callback")
-  public Response callback(@Context HttpServletRequest request) throws URISyntaxException {
-    String callbackPath = String.format("%s/application/", request.getContextPath());
-    return Response.temporaryRedirect(new URI(callbackPath)).build();
+  public Response callback(@Context HttpServletRequest request, @Context HttpServletResponse response) throws URISyntaxException, IdentityVerificationException {
+
+    Tokens tokens = authenticationController.handle(new JavaxRequest(request), new JavaxResponse(response));
+    String idToken = tokens.getIdToken(); // JWT mit User-Claims
+
+    // Extrahiere User-Infos aus dem ID Token (primärer Weg)
+    try {
+      DecodedJWT jwt = JWT.decode(idToken);
+      Map<String, Claim> claims = jwt.getClaims(); // Oder jwt.getClaims() für Map
+      response.addCookie(new Cookie("name", claims.get("name").asString()));
+    } catch (Exception e) {}
+
+    return Response.temporaryRedirect(new URI("jee-webshop/application")).build();
   }
 }
