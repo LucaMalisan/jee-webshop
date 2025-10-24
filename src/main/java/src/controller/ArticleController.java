@@ -3,8 +3,10 @@ package src.controller;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -84,6 +86,14 @@ public class ArticleController {
   public void setArticleDetail(HttpServletRequest request) {
     long sku = Long.parseLong(request.getParameter("sku"));
     this.articleDetail = repository.findBySku(sku);
+  }
+
+  public String getCookieByName(HttpServletRequest request, String name) {
+    return Arrays.stream(request.getCookies())
+            .filter(e -> e.getName().equals(name))
+            .map(Cookie::getValue)
+            .findFirst()
+            .orElse(null);
   }
 
     /**

@@ -85,6 +85,13 @@ public class ServletController {
       response.addCookie(new Cookie("name", claims.get("name").asString()));
     } catch (Exception e) {}
 
-    return Response.temporaryRedirect(new URI("jee-webshop/application")).build();
+    String redirectUrl = String.format(
+            "%s://%s:%d%s/application/", // /jee-webshop wird durch getContextPath() ersetzt
+            request.getScheme(),
+            request.getServerName(),
+            request.getServerPort(),
+            request.getContextPath()
+    );
+    return Response.temporaryRedirect(new URI(redirectUrl)).build();
   }
 }

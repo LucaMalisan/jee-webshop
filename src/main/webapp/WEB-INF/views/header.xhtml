@@ -9,9 +9,21 @@
         <input type="text" id="search" class="fill-up" value="#{request.getParameter('query')}"/>
         <button type="submit" id="submit" redirectTo="#{request.contextPath}/application"> Search</button>
     </div>
-    <a href="#{request.contextPath}/application/login" id="user">
-        <span class="material-symbols-outlined">person</span>
-    </a>
+
+    <c:choose>
+        <c:when test="#{articleController.getCookieByName(request, 'com.auth0.state') != null}">
+            <span class="material-symbols-outlined">person</span>
+            <h:outputText value="#{articleController.getCookieByName(request, 'name')}"/>
+        </c:when>
+        <c:otherwise>
+            <a href="#{request.contextPath}/application/login" id="user">
+                <span class="material-symbols-outlined">person</span>
+                <p> Login </p>
+            </a>
+        </c:otherwise>
+    </c:choose>
+
+
     <a href="" id="go-to-cart"><span class="material-symbols-outlined big-icon">shopping_cart</span></a>
 
     <script>
