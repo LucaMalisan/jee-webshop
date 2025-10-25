@@ -42,13 +42,21 @@
                         <p class="medium-font"> #{articleController.articleDetail.title} </p>
                         <p id="description">#{articleController.articleDetail.description}</p>
                         <p id="stock"><i>#{articleController.articleDetail.stock} pieces in stock</i></p>
-                        <div class="cart">
-                            <input type="number" id="cart-amount" placeholder="Quantity"/>
-                            <button id="add-to-cart">
-                                <span class="material-symbols-outlined">shopping_cart</span>
-                                <div>Add to cart</div>
-                            </button>
-                        </div>
+
+                        <c:choose>
+                            <c:when test="#{authController.mailExistsAndIsConfirmed(authController.getCookieByName(request, 'jwt'))}">
+                                <div class="cart">
+                                    <input type="number" id="cart-amount" placeholder="Quantity"/>
+                                    <button id="add-to-cart">
+                                        <span class="material-symbols-outlined">shopping_cart</span>
+                                        <div>Add to cart</div>
+                                    </button>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <p> Confirm your e-mail to add articles to the cart </p>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
             </div>
@@ -67,12 +75,12 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-      setBigImage(document.getElementById("image-carousel").firstElementChild);
+    setBigImage(document.getElementById("image-carousel").firstElementChild);
 
-      // fill header with cached values
-      let filterValue = new URLSearchParams(new URL(sessionStorage.getItem("main-page")).search);
-      document.getElementById("category").value = filterValue.get("categoryUuid");
-      document.getElementById("search").value = filterValue.get("query");
+    // fill header with cached values
+    let filterValue = new URLSearchParams(new URL(sessionStorage.getItem("main-page")).search);
+    document.getElementById("category").value = filterValue.get("categoryUuid");
+    document.getElementById("search").value = filterValue.get("query");
   })
 </script>
 </html>

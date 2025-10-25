@@ -1,4 +1,4 @@
-<div class="small-margin row-big-space" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<div class="small-margin row-big-space" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets">
     <img src="#{request.contextPath}/resources/logo.png" class="logo" id="logo"/>
 
     <div class="row-small-space low-height fill-up">
@@ -10,11 +10,12 @@
         <button type="submit" id="submit" redirectTo="#{request.contextPath}/application"> Search</button>
     </div>
 
+    <ui:param name="email" value="#{authController.extractEmail(authController.getCookieByName(request, 'jwt'))}"/>
     <c:choose>
-        <c:when test="#{articleController.getCookieByName(request, 'com.auth0.state') != null}">
+        <c:when test="#{email != null}">
             <div id="user">
                 <span class="material-symbols-outlined">person</span>
-                <h:outputText value="#{articleController.getCookieByName(request, 'name')}"/>
+                <h:outputText value="#{email}"/>
             </div>
         </c:when>
         <c:otherwise>

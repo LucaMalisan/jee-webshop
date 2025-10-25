@@ -88,17 +88,6 @@ public class ArticleController {
     this.articleDetail = repository.findBySku(sku);
   }
 
-  public String getCookieByName(HttpServletRequest request, String name) {
-    if (request.getCookies() != null) {
-      return Arrays.stream(request.getCookies())
-          .filter(e -> Objects.equals(e.getName(), name))
-          .map(Cookie::getValue)
-          .findFirst()
-          .orElse(null);
-    }
-    return null;
-  }
-
   /**
    * Parse page out of request and fix invalid values
    *
