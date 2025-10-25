@@ -53,6 +53,11 @@ public class ArticleRepository {
     TypedQuery<Article> query =
         entitymanager.createQuery("SELECT a FROM Article a WHERE a.sku = ?1", Article.class);
     query.setParameter("1", sku);
-    return query.getSingleResult();
+
+    try {
+      return query.getSingleResult();
+    } catch (Exception e) {
+      return null;
+    }
   }
 }

@@ -172,7 +172,8 @@ button{
   display: none;
 }
 
-a#user {
+#user {
   text-decoration: none;
   display: flex;
+  align-items: center;
 }

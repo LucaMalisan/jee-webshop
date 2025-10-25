@@ -36,6 +36,12 @@ CREATE TABLE article_image
     position    INTEGER
 );
 
+CREATE TABLE user_email_confirmed (
+    email       VARCHAR(255) PRIMARY KEY,
+    confirm_key VARCHAR(36) DEFAULT gen_random_uuid(),
+    confirmed   BOOLEAN
+)
+
 INSERT INTO category(category_name) VALUES ('Clothing');
 INSERT INTO category(category_name) VALUES ('Sports & Outdoors');
 INSERT INTO category(category_name) VALUES ('Home');

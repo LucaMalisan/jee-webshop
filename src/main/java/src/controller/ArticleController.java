@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.Getter;
@@ -25,8 +26,7 @@ public class ArticleController {
   @Inject private ArticleRepository repository;
   @Inject private RequestLifecycle requestLifecycle;
 
-  @Getter
-  private Article articleDetail;
+  @Getter private Article articleDetail;
   private List<Article> articles;
   private static final double PAGE_SIZE = 12;
 
@@ -89,14 +89,17 @@ public class ArticleController {
   }
 
   public String getCookieByName(HttpServletRequest request, String name) {
-    return Arrays.stream(request.getCookies())
-            .filter(e -> e.getName().equals(name))
-            .map(Cookie::getValue)
-            .findFirst()
-            .orElse(null);
+    if (request.getCookies() != null) {
+      return Arrays.stream(request.getCookies())
+          .filter(e -> Objects.equals(e.getName(), name))
+          .map(Cookie::getValue)
+          .findFirst()
+          .orElse(null);
+    }
+    return null;
   }
 
-    /**
+  /**
    * Parse page out of request and fix invalid values
    *
    * @param request: HttpServletRequest

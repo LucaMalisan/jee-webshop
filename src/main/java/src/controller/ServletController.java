@@ -7,6 +7,7 @@ import com.auth0.json.auth.UserInfo;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.mailjet.client.errors.MailjetException;
 import io.github.cromat.JavaxRequest;
 import io.github.cromat.JavaxResponse;
 import jakarta.enterprise.context.RequestScoped;
@@ -24,8 +25,13 @@ import jakarta.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.UUID;
+import javax.naming.NamingException;
 import lombok.extern.java.Log;
 import src.auth.Auth0AuthenticationConfig;
+import src.auth.AuthMailSender;
+import src.model.UserEmailConfirmed;
+import src.repository.UserEmailConfirmedRepository;
 
 @Controller
 @RequestScoped
@@ -36,6 +42,9 @@ public class ServletController {
   @Inject private Auth0AuthenticationConfig config;
 
   @Inject private AuthenticationController authenticationController;
+
+  @Inject private UserEmailConfirmedRepository repository;
+  @Inject private UserEmailConfirmedRepository userEmailConfirmedRepository;
 
   @GET
   public String index() {
@@ -59,7 +68,10 @@ public class ServletController {
     String callbackUrl =
         String.format(
             "%s://%s:%s%s/application/callback",
-            request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath());
+            request.getScheme(),
+            request.getServerName(),
+            request.getServerPort(),
+            request.getContextPath());
 
     // Create the authorization URL to redirect the user to, to begin the authentication flow.
     String authURL =
@@ -73,25 +85,46 @@ public class ServletController {
 
   @GET
   @Path("/callback")
-  public Response callback(@Context HttpServletRequest request, @Context HttpServletResponse response) throws URISyntaxException, IdentityVerificationException {
+  public Response callback(
+      @Context HttpServletRequest request, @Context HttpServletResponse response)
+      throws URISyntaxException, IdentityVerificationException, NamingException, MailjetException {
 
-    Tokens tokens = authenticationController.handle(new JavaxRequest(request), new JavaxResponse(response));
+    Tokens tokens =
+        authenticationController.handle(new JavaxRequest(request), new JavaxResponse(response));
     String idToken = tokens.getIdToken(); // JWT mit User-Claims
 
-    // Extrahiere User-Infos aus dem ID Token (primärer Weg)
-    try {
-      DecodedJWT jwt = JWT.decode(idToken);
-      Map<String, Claim> claims = jwt.getClaims(); // Oder jwt.getClaims() für Map
-      response.addCookie(new Cookie("name", claims.get("name").asString()));
-    } catch (Exception e) {}
-
-    String redirectUrl = String.format(
+    String baseURL =
+        String.format(
             "%s://%s:%d%s/application/", // /jee-webshop wird durch getContextPath() ersetzt
             request.getScheme(),
             request.getServerName(),
             request.getServerPort(),
-            request.getContextPath()
-    );
-    return Response.temporaryRedirect(new URI(redirectUrl)).build();
+            request.getContextPath());
+
+    try {
+      // extract email from generated JWT
+      DecodedJWT jwt = JWT.decode(idToken);
+      Map<String, Claim> claims = jwt.getClaims();
+      String email = claims.get("email").asString();
+
+      UserEmailConfirmed emailConfirmed = repository.findByEmail(email);
+      if (emailConfirmed == null) {
+
+        // create entry if user is new
+        emailConfirmed = new UserEmailConfirmed();
+        emailConfirmed.setEmail(email);
+        emailConfirmed.setConfirmKey(UUID.randomUUID().toString());
+        repository.save(emailConfirmed);
+
+        // send email with generated confirm key
+        new AuthMailSender().sendMail(emailConfirmed, baseURL);
+      }
+
+      response.addCookie(new Cookie("name", email));
+    } catch (Exception e) {
+      log.severe(e.getMessage());
+    }
+
+    return Response.temporaryRedirect(new URI(baseURL)).build();
   }
 }
