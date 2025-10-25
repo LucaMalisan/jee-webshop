@@ -53,4 +53,13 @@ public class AuthController {
 
     return userEmailConfirmed.isConfirmed();
   }
+
+  public String getBaseURL(HttpServletRequest request) {
+    return String.format(
+            "%s://%s:%d%s/application",
+            request.getScheme(),
+            request.getServerName(),
+            request.getServerPort(),
+            request.getContextPath());
+  }
 }

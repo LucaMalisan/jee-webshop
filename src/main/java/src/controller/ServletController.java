@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.net.URI;
@@ -35,7 +36,6 @@ public class ServletController {
   @Inject private AuthenticationController authenticationController;
 
   @Inject private UserEmailConfirmedRepository repository;
-  @Inject private UserEmailConfirmedRepository userEmailConfirmedRepository;
 
   @GET
   public String index() {
@@ -83,14 +83,7 @@ public class ServletController {
         authenticationController.handle(new JavaxRequest(request), new JavaxResponse(response));
     String idToken = tokens.getIdToken(); // JWT mit User-Claims
     String email = new AuthController().extractEmail(idToken);
-
-    String baseURL =
-        String.format(
-            "%s://%s:%d%s/application", // /jee-webshop wird durch getContextPath() ersetzt
-            request.getScheme(),
-            request.getServerName(),
-            request.getServerPort(),
-            request.getContextPath());
+    String baseURL = new AuthController().getBaseURL(request);
 
     try {
       UserEmailConfirmed emailConfirmed = repository.findByEmail(email);
@@ -116,10 +109,11 @@ public class ServletController {
 
   @GET
   @Path("/confirm-email/{confirm-key}")
-  public Response confirmEmail(String confirmKey, @Context HttpServletRequest request) {
-    UserEmailConfirmed emailConfirmed = repository.findByEmail(confirmKey);
+  public String confirmEmail(
+      @PathParam("confirm-key") String confirmKey) {
+    UserEmailConfirmed emailConfirmed = repository.findByConfirmedKey(confirmKey);
     emailConfirmed.setConfirmed(true);
-    repository.save(emailConfirmed);
+    repository.merge(emailConfirmed);
     return "emailConfirmed.xhtml";
   }
 }

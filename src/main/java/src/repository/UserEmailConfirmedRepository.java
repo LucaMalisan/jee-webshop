@@ -29,8 +29,28 @@ public class UserEmailConfirmedRepository {
     }
   }
 
+  public UserEmailConfirmed findByConfirmedKey(String confirmKey) {
+    entitymanager.clear();
+
+    TypedQuery<UserEmailConfirmed> query =
+        entitymanager.createQuery(
+            "SELECT a FROM UserEmailConfirmed a WHERE a.confirmKey = ?1", UserEmailConfirmed.class);
+    query.setParameter(1, confirmKey);
+
+    try {
+      return query.getSingleResult();
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
   @Transactional
   public void save(UserEmailConfirmed userEmailConfirmed) {
     entitymanager.persist(userEmailConfirmed);
+  }
+
+  @Transactional
+  public void merge(UserEmailConfirmed userEmailConfirmed) {
+    entitymanager.merge(userEmailConfirmed);
   }
 }
