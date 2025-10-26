@@ -15,6 +15,7 @@ import lombok.Getter;
 import org.eclipse.krazo.lifecycle.RequestLifecycle;
 import src.model.Article;
 import src.repository.ArticleRepository;
+import src.repository.ShoppingCartRepository;
 
 // TODO use PostConstruct
 
@@ -24,11 +25,14 @@ import src.repository.ArticleRepository;
 public class ArticleController {
 
   @Inject private ArticleRepository repository;
+  @Inject private ShoppingCartRepository cartRepository;
   @Inject private RequestLifecycle requestLifecycle;
 
   @Getter private Article articleDetail;
   private List<Article> articles;
   private static final double PAGE_SIZE = 12;
+  @Inject private ShoppingCartRepository shoppingCartRepository;
+  @Named @Inject private AuthController authController;
 
   /**
    * Calculates the highest page available based upon the result set of articles
@@ -86,6 +90,11 @@ public class ArticleController {
   public void setArticleDetail(HttpServletRequest request) {
     long sku = Long.parseLong(request.getParameter("sku"));
     this.articleDetail = repository.findBySku(sku);
+  }
+
+  public List<Article> getArticlesInShoppingCart(HttpServletRequest request) {
+    String email = authController.extractEmail(request);
+    return shoppingCartRepository.getShoppingCartArticles(email);
   }
 
   /**

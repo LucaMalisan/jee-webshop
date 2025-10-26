@@ -10,7 +10,7 @@
         <button type="submit" id="submit" redirectTo="#{request.contextPath}/application"> Search</button>
     </div>
 
-    <ui:param name="email" value="#{authController.extractEmail(authController.getCookieByName(request, 'jwt'))}"/>
+    <ui:param name="email" value="#{authController.extractEmail(request)}"/>
     <c:choose>
         <c:when test="#{email != null}">
             <div id="user">
@@ -27,7 +27,7 @@
     </c:choose>
 
 
-    <a href="" id="go-to-cart"><span class="material-symbols-outlined big-icon">shopping_cart</span></a>
+    <a href="#{authController.getBaseURL(request)}/shopping-cart" id="go-to-cart"><span class="material-symbols-outlined big-icon">shopping_cart</span></a>
 
     <script>
       document.getElementById("submit").addEventListener("click", evt => {

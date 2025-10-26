@@ -36,10 +36,17 @@ CREATE TABLE article_image
     position    INTEGER
 );
 
-CREATE TABLE user_email_confirmed (
+CREATE TABLE user_data (
     email       VARCHAR(255) PRIMARY KEY,
     confirm_key VARCHAR(36) DEFAULT gen_random_uuid(),
     confirmed   BOOLEAN
+)
+
+CREATE TABLE shopping_cart (
+    uuid        VARCHAR(36) PRIMARY KEY DEFAULT gen_random_uuid(),
+    email       VARCHAR(255) NOT NULL REFERENCES user_data(email),
+    article_sku BIGINT NOT NULL REFERENCES article(sku),
+    amount      BIGINT NOT NULL ,
 )
 
 INSERT INTO category(category_name) VALUES ('Clothing');

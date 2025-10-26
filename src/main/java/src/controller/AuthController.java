@@ -11,15 +11,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
-import src.model.UserEmailConfirmed;
-import src.repository.UserEmailConfirmedRepository;
+import src.model.User;
+import src.repository.UserRepository;
 
 @Named
 @RequestScoped
 @SuppressWarnings("unused")
 public class AuthController {
 
-  @Inject private UserEmailConfirmedRepository repository;
+  @Inject private UserRepository repository;
 
   public String getCookieByName(HttpServletRequest request, String name) {
     if (request.getCookies() != null) {
@@ -42,24 +42,29 @@ public class AuthController {
     }
   }
 
-  public boolean mailExistsAndIsConfirmed(String idToken) {
-    String email = this.extractEmail(idToken);
+  public String extractEmail(HttpServletRequest request) {
+    String idToken = this.getCookieByName(request, "jwt");
+    return this.extractEmail(idToken);
+  }
+
+  public boolean mailExistsAndIsConfirmed(HttpServletRequest request) {
+    String email = this.extractEmail(request);
 
     if (email == null) {
       return false;
     }
 
-    UserEmailConfirmed userEmailConfirmed = repository.findByEmail(email);
+    User user = repository.findByEmail(email);
 
-    return userEmailConfirmed.isConfirmed();
+    return user.isConfirmed();
   }
 
   public String getBaseURL(HttpServletRequest request) {
     return String.format(
-            "%s://%s:%d%s/application",
-            request.getScheme(),
-            request.getServerName(),
-            request.getServerPort(),
-            request.getContextPath());
+        "%s://%s:%d%s/application",
+        request.getScheme(),
+        request.getServerName(),
+        request.getServerPort(),
+        request.getContextPath());
   }
 }

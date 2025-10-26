@@ -44,17 +44,25 @@
                         <p id="stock"><i>#{articleController.articleDetail.stock} pieces in stock</i></p>
 
                         <c:choose>
-                            <c:when test="#{authController.mailExistsAndIsConfirmed(authController.getCookieByName(request, 'jwt'))}">
-                                <div class="cart">
-                                    <input type="number" id="cart-amount" placeholder="Quantity"/>
-                                    <button id="add-to-cart">
+                            <c:when test="#{authController.mailExistsAndIsConfirmed(request)}">
+                                <form class="cart" action="#{authController.getBaseURL(request)}/add-to-shopping-cart" method="post">
+                                    <input type="number" name="amount" id="cart-amount" min="0" max="#{articleController.articleDetail.stock}" placeholder="Quantity"/>
+                                    <input type="text" class="hidden" name="sku" value="#{articleController.articleDetail.sku}"/>
+                                    <button type="submit" id="add-to-cart">
                                         <span class="material-symbols-outlined">shopping_cart</span>
                                         <div>Add to cart</div>
                                     </button>
-                                </div>
+                                </form>
                             </c:when>
                             <c:otherwise>
-                                <p> Confirm your e-mail to add articles to the cart </p>
+                                <c:choose>
+                                    <c:when test="#{authController.extractEmail(request) != null}">
+                                        <p> Confirm your e-mail to add articles to the cart </p>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p> Login to add articles to the cart</p>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -82,6 +90,7 @@
     document.getElementById("category").value = filterValue.get("categoryUuid");
     document.getElementById("search").value = filterValue.get("query");
   })
+
 </script>
 </html>
 

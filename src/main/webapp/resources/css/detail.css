@@ -44,7 +44,7 @@ div.article-information p {
   margin: 5px 5px 5px 0;
 }
 
-div.cart {
+form.cart {
   display: flex;
   flex-direction: row;
   gap: 20px;

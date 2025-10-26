@@ -3,21 +3,20 @@ package src.auth;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 import java.util.Properties;
-import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import lombok.extern.java.Log;
-import src.model.UserEmailConfirmed;
+import src.model.User;
 import javax.naming.Context;
 
 @Log
 public class AuthMailSender {
 
-  public void sendMail(UserEmailConfirmed userEmailConfirmed, String baseURL)
+  public void sendMail(User user, String baseURL)
       throws NamingException, MessagingException {
     Context env = (Context) new InitialContext().lookup("java:comp/env");
 
-    String to = userEmailConfirmed.getEmail();
+    String to = user.getEmail();
     String from = (String) env.lookup("email.address");
 
     Properties props = new Properties();
@@ -46,7 +45,7 @@ public class AuthMailSender {
     message.setText(
         String.format(
             "Thanks for your registration at JEE webshop. Please confirm your email at %s/confirm-email/%s>here</a>",
-            baseURL, userEmailConfirmed.getConfirmKey()));
+            baseURL, user.getConfirmKey()));
 
     new Thread(
             () -> {

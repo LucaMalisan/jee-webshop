@@ -11,8 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_email_confirmed")
-public class UserEmailConfirmed implements Serializable {
+@Table(name = "user_data")
+public class User implements Serializable {
 
   @Id
   @Column(name = "email")
