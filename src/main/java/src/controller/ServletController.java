@@ -86,7 +86,7 @@ public class ServletController {
             .withScope(config.getScope())
             .build();
 
-    return Response.temporaryRedirect(new URI(authURL)).build();
+    return Response.seeOther(new URI(authURL)).build();
   }
 
   @GET
@@ -121,7 +121,7 @@ public class ServletController {
       log.severe(e.getMessage());
     }
 
-    return Response.temporaryRedirect(new URI(baseURL)).build();
+    return Response.seeOther(new URI(baseURL)).build();
   }
 
   @GET
@@ -167,9 +167,8 @@ public class ServletController {
     } catch (Exception ignored) {
     }
 
-    return Response.temporaryRedirect(
+    return Response.seeOther(
             new URI(String.format("%s/detail?sku=%s", authController.getBaseURL(request), skuStr)))
-            .status(307)
         .build();
   }
 }
