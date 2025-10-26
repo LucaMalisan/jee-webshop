@@ -28,7 +28,7 @@
                         <img id="big-image" src="#{articleController.articleDetail.getPrimaryImageURL()}" alt="selected-article-image"/>
                         <div id="image-carousel">
                             <ui:repeat value="#{articleController.articleDetail.imageList}" var="image" varStatus="i">
-                                <img src="#{image.imageURL}" alt="product-image" onclick="setBigImage(this)"/>
+                                <img src="#{image.imageURL}" alt="product-image" onclick="setBigImage(this)" class="small-image"/>
                             </ui:repeat>
                         </div>
                     </div>

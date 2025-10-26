@@ -29,7 +29,7 @@ div#image-carousel {
   gap: 10px;
 }
 
-div#image-carousel img {
+img.small-image {
   height: 100px;
   cursor: pointer;
 }

@@ -1,0 +1,12 @@
+table.shopping-cart {
+  width: 80%;
+}
+
+table.shopping-cart td {
+  border-left: none;
+  border-right: none;
+}
+
+div.main {
+  justify-content: center;
+}

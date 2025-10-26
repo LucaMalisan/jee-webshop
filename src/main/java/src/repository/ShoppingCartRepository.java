@@ -7,6 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+import src.controller.ArticleController;
 import src.model.Article;
 import src.model.ShoppingCart;
 
@@ -15,6 +16,8 @@ public class ShoppingCartRepository {
 
   @PersistenceContext EntityManager entitymanager;
 
+  @Inject ArticleRepository articleRepository;
+
   public List<Article> getShoppingCartArticles(String email) {
     return (List<Article>)
         entitymanager
@@ -22,7 +25,7 @@ public class ShoppingCartRepository {
             .setParameter(1, email)
             .getResultList()
             .stream()
-            .map(e -> ((ShoppingCart) e).getArticle())
+            .map(e -> articleRepository.findBySku(((ShoppingCart) e).getArticleSku()))
             .collect(Collectors.toList());
   }
 

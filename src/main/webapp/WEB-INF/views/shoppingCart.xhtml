@@ -12,28 +12,37 @@
     <header class="header">
         <ui:include src="header.xhtml"/>
     </header>
-
-    <f:metadata>
-        <f:viewAction action="#{articleController.setArticleDetail(request)}"/>
-    </f:metadata>
-
     <div class="main">
-        <table>
-            <ui:repeat value="#{articleController.getArticlesInShoppingCart(request)}" var="article">
-                <tr>
-                    <td>
-                        <img class="article-image" src="#{article.getPrimaryImageURL()}" alt="image-url"/>
-                    </td>
-                    <td>
-                        <p id="discount" class="#{article.listPrice == null || !article.available ? 'hidden' : ''}"><b> -#{article.getDiscountPercent()}% </b></p>
-                        <p class="small-font"> #{article.formatPrice()} </p>
-                    </td>
-                    <td>
-                        <p class="medium-font"> #{article.title} </p>
-                    </td>
-                </tr>
-            </ui:repeat>
-        </table>
+        <c:choose>
+            <c:when test="#{authController.mailExistsAndIsConfirmed(request)}">
+                <table class="shopping-cart">
+                    <ui:repeat value="#{articleController.getArticlesInShoppingCart(request)}" var="article">
+                        <tr>
+                            <td>
+                                <img class="small-image" src="#{article.getPrimaryImageURL()}" alt="image-url"/>
+                            </td>
+                            <td>
+                                <p id="discount" class="#{article.listPrice == null || !article.available ? 'hidden' : ''}"><b> -#{article.getDiscountPercent()}% </b></p>
+                                <p class="small-font"> #{article.formatPrice()} </p>
+                            </td>
+                            <td>
+                                <p class="medium-font"> #{article.title} </p>
+                            </td>
+                        </tr>
+                    </ui:repeat>
+                </table>
+            </c:when>
+            <c:otherwise>
+                <c:choose>
+                    <c:when test="#{authController.extractEmail(request) != null}">
+                        <p> Confirm your e-mail to add articles to the cart </p>
+                    </c:when>
+                    <c:otherwise>
+                        <p> Login to add articles to the cart</p>
+                    </c:otherwise>
+                </c:choose>
+            </c:otherwise>
+        </c:choose>
     </div>
 </h:body>
 </html>
