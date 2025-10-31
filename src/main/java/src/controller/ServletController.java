@@ -17,11 +17,13 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -30,6 +32,7 @@ import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
+import java.util.logging.Logger;
 import javax.transaction.Transactional;
 import lombok.extern.java.Log;
 import src.auth.Auth0AuthenticationConfig;
@@ -170,5 +173,35 @@ public class ServletController {
     return Response.seeOther(
             new URI(String.format("%s/detail?sku=%s", authController.getBaseURL(request), skuStr)))
         .build();
+  }
+
+  @POST
+  @Path("/shopping-cart/change-amount/{sku}/{amount}")
+  public Response changeAmount(
+      @PathParam("amount") String amountStr, @PathParam("sku") String skuStr) {
+    long sku = Long.parseLong(skuStr);
+    long amount = Long.parseLong(amountStr);
+    String email = new AuthController().extractEmail(request);
+
+    Logger logger = Logger.getLogger(AuthController.class.getName());
+    logger.info(sku + "");
+    logger.info(amount + "");
+
+    ShoppingCart shoppingCart = shoppingCartRepository.findBySkuAndEmail(sku, email);
+
+    logger.info(shoppingCart.getUuid());
+
+    shoppingCart.setAmount(amount);
+    shoppingCartRepository.merge(shoppingCart);
+
+    return Response.ok().build();
+  }
+
+  @DELETE
+  @Path("/shopping-cart/delete-entry/{uuid}")
+  public Response changeAmount(@PathParam("uuid") String entryUuidStr) {
+    shoppingCartRepository.deleteByUuid(entryUuidStr);
+
+    return Response.ok().build();
   }
 }

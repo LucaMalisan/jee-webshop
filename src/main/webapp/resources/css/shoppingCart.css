@@ -5,8 +5,17 @@ table.shopping-cart {
 table.shopping-cart td {
   border-left: none;
   border-right: none;
+  padding: 20px;
+}
+
+table.shopping-cart img {
+  max-width: unset;
 }
 
 div.main {
   justify-content: center;
+}
+
+.delete {
+  cursor: pointer;
 }

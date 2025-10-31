@@ -16,17 +16,23 @@
         <c:choose>
             <c:when test="#{authController.mailExistsAndIsConfirmed(request)}">
                 <table class="shopping-cart">
-                    <ui:repeat value="#{articleController.getArticlesInShoppingCart(request)}" var="article">
+                    <ui:repeat value="#{articleController.getShoppingCartEntries(request)}" var="entry">
                         <tr>
                             <td>
-                                <img class="small-image" src="#{article.getPrimaryImageURL()}" alt="image-url"/>
+                                <img class="small-image" src="#{entry.getArticle().getPrimaryImageURL()}" alt="image-url"/>
                             </td>
                             <td>
-                                <p id="discount" class="#{article.listPrice == null || !article.available ? 'hidden' : ''}"><b> -#{article.getDiscountPercent()}% </b></p>
-                                <p class="small-font"> #{article.formatPrice()} </p>
+                                <p id="discount" class="#{entry.getArticle().listPrice == null || !entry.getArticle().available ? 'hidden' : ''}"><b> -#{entry.getArticle().getDiscountPercent()}% </b></p>
+                                <p class="small-font"> #{entry.getArticle().formatPrice()} </p>
                             </td>
                             <td>
-                                <p class="medium-font"> #{article.title} </p>
+                                <p class="medium-font"> #{entry.getArticle().title} </p>
+                            </td>
+                            <td>
+                                <input type="number" class="amount" actionurl="#{authController.getBaseURL(request)}/shopping-cart/change-amount/#{entry.getArticle().getSku()}" value="#{entry.amount}"/>
+                            </td>
+                            <td>
+                                <span actionurl="#{authController.getBaseURL(request)}/shopping-cart/delete-entry/#{entry.uuid}" class="delete material-symbols-outlined">delete</span>
                             </td>
                         </tr>
                     </ui:repeat>
@@ -45,5 +51,25 @@
         </c:choose>
     </div>
 </h:body>
+<script>
+  let amountInputs = document.querySelectorAll(".amount");
+  amountInputs.forEach(e => e.addEventListener("change", (event) => {
+        let url = event.target.getAttribute("actionurl");
+        fetch(url + "/" + event.target.value, {method: 'POST'})
+        .then(() => location.reload())
+        .catch(err => console.error(err));
+      })
+  );
+
+  let deleteButtons = document.querySelectorAll(".delete");
+  deleteButtons.forEach(e => e.addEventListener("click", (event) => {
+        let url = event.target.getAttribute("actionurl");
+        fetch(url, {method: 'DELETE'})
+        .then(() => location.reload())
+        .catch(err => console.error(err));
+      })
+  );
+
+</script>
 </html>
 

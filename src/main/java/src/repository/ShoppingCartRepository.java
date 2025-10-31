@@ -1,14 +1,10 @@
 package src.repository;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
-import src.controller.ArticleController;
-import src.model.Article;
 import src.model.ShoppingCart;
 
 @ApplicationScoped
@@ -16,17 +12,15 @@ public class ShoppingCartRepository {
 
   @PersistenceContext EntityManager entitymanager;
 
-  @Inject ArticleRepository articleRepository;
-
-  public List<Article> getShoppingCartArticles(String email) {
-    return (List<Article>)
+  public List<ShoppingCart> getShoppingCartEntries(String email) {
+    return (List<ShoppingCart>)
         entitymanager
-            .createQuery("SELECT c FROM ShoppingCart c WHERE c.email = ?1")
+            .createQuery(
+                "SELECT c FROM ShoppingCart c WHERE c.email = ?1 ORDER BY c.uuid") // keep fixed
+                                                                                   // order for
+                                                                                   // usability
             .setParameter(1, email)
-            .getResultList()
-            .stream()
-            .map(e -> articleRepository.findBySku(((ShoppingCart) e).getArticleSku()))
-            .collect(Collectors.toList());
+            .getResultList();
   }
 
   @Transactional
@@ -39,6 +33,14 @@ public class ShoppingCartRepository {
     entitymanager.merge(shoppingCart);
   }
 
+  @Transactional
+  public void deleteByUuid(String uuidStr) {
+    entitymanager
+        .createQuery("DELETE FROM ShoppingCart c WHERE c.uuid = ?1")
+        .setParameter(1, uuidStr)
+        .executeUpdate();
+  }
+
   public ShoppingCart findBySkuAndEmail(Long sku, String email) {
     try {
       return (ShoppingCart)
@@ -46,6 +48,18 @@ public class ShoppingCartRepository {
               .createQuery("SELECT c FROM ShoppingCart c WHERE c.email = ?1 and c.articleSku = ?2")
               .setParameter(1, email)
               .setParameter(2, sku)
+              .getSingleResult();
+    } catch (Exception ex) {
+      return null;
+    }
+  }
+
+  public ShoppingCart findByUuid(String uuid) {
+    try {
+      return (ShoppingCart)
+          entitymanager
+              .createQuery("SELECT c FROM ShoppingCart c WHERE c.uuid = ?1")
+              .setParameter(1, uuid)
               .getSingleResult();
     } catch (Exception ex) {
       return null;

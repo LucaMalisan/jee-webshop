@@ -3,17 +3,15 @@ package src.controller;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.Getter;
 import org.eclipse.krazo.lifecycle.RequestLifecycle;
 import src.model.Article;
+import src.model.ShoppingCart;
 import src.repository.ArticleRepository;
 import src.repository.ShoppingCartRepository;
 
@@ -92,9 +90,9 @@ public class ArticleController {
     this.articleDetail = repository.findBySku(sku);
   }
 
-  public List<Article> getArticlesInShoppingCart(HttpServletRequest request) {
+  public List<ShoppingCart> getShoppingCartEntries(HttpServletRequest request) {
     String email = authController.extractEmail(request);
-    return shoppingCartRepository.getShoppingCartArticles(email);
+    return shoppingCartRepository.getShoppingCartEntries(email);
   }
 
   /**
