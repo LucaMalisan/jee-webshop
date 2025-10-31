@@ -40,7 +40,7 @@ public class ArticleRepository {
     }
 
     if (!StringUtils.isEmpty(query)) {
-      predicates.add(cb.like(cb.lower(article.get("title")), "%" + query + "%"));
+      predicates.add(cb.like(cb.lower(article.get("title")), "%" + query.toLowerCase() + "%"));
     }
 
     cq = cq.where(predicates.toArray(new Predicate[0]));

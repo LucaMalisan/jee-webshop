@@ -37,6 +37,16 @@
                         </tr>
                     </ui:repeat>
                 </table>
+                <div class="price-calculation">
+                    <p> Price excl. VAT: </p>
+                    <p> #{shoppingCartController.getPriceExclVat(request)}</p>
+                    <p> VAT</p>
+                    <p> #{shoppingCartController.getVat(request)}</p>
+                    <h3> Total </h3>
+                    <h3> #{shoppingCartController.getTotal(request)} </h3>
+                    <i> You save </i>
+                    <i> #{shoppingCartController.getDiscount(request)}</i>
+                </div>
             </c:when>
             <c:otherwise>
                 <c:choose>

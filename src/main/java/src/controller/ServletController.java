@@ -37,8 +37,10 @@ import javax.transaction.Transactional;
 import lombok.extern.java.Log;
 import src.auth.Auth0AuthenticationConfig;
 import src.auth.AuthMailSender;
+import src.model.Article;
 import src.model.ShoppingCart;
 import src.model.User;
+import src.repository.ArticleRepository;
 import src.repository.ShoppingCartRepository;
 import src.repository.UserRepository;
 
@@ -58,6 +60,7 @@ public class ServletController {
 
   @Context private HttpServletRequest request;
   @Named @Inject private AuthController authController;
+  @Inject private ArticleRepository articleRepository;
 
   @GET
   public String index() {
@@ -151,9 +154,9 @@ public class ServletController {
 
     try {
       long sku = Long.parseLong(skuStr);
-      long amount = Long.parseLong(amountStr);
       String email = new AuthController().extractEmail(request);
-
+      Article article = articleRepository.findBySku(sku);
+      long amount = Math.min(Long.parseLong(amountStr), article.getStock());
       ShoppingCart shoppingCart = shoppingCartRepository.findBySkuAndEmail(sku, email);
 
       if (shoppingCart == null) {
@@ -180,17 +183,10 @@ public class ServletController {
   public Response changeAmount(
       @PathParam("amount") String amountStr, @PathParam("sku") String skuStr) {
     long sku = Long.parseLong(skuStr);
-    long amount = Long.parseLong(amountStr);
     String email = new AuthController().extractEmail(request);
-
-    Logger logger = Logger.getLogger(AuthController.class.getName());
-    logger.info(sku + "");
-    logger.info(amount + "");
-
     ShoppingCart shoppingCart = shoppingCartRepository.findBySkuAndEmail(sku, email);
 
-    logger.info(shoppingCart.getUuid());
-
+    long amount = Math.min(Long.parseLong(amountStr), shoppingCart.getArticle().getStock());
     shoppingCart.setAmount(amount);
     shoppingCartRepository.merge(shoppingCart);
 
@@ -199,7 +195,7 @@ public class ServletController {
 
   @DELETE
   @Path("/shopping-cart/delete-entry/{uuid}")
-  public Response changeAmount(@PathParam("uuid") String entryUuidStr) {
+  public Response deleteEntry(@PathParam("uuid") String entryUuidStr) {
     shoppingCartRepository.deleteByUuid(entryUuidStr);
 
     return Response.ok().build();

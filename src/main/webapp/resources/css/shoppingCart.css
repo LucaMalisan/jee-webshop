@@ -19,3 +19,20 @@ div.main {
 .delete {
   cursor: pointer;
 }
+
+div.main:has(.shopping-cart) {
+  flex-direction: column;
+  align-items: center;
+}
+
+div.price-calculation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 20%;
+  margin-right: 10%;
+  align-self: end;
+}
+
+div.price-calculation p, div.price-calculation h3 {
+  margin: 0;
+}

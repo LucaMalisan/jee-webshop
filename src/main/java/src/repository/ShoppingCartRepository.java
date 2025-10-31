@@ -3,6 +3,7 @@ package src.repository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import src.model.ShoppingCart;
@@ -13,14 +14,26 @@ public class ShoppingCartRepository {
   @PersistenceContext EntityManager entitymanager;
 
   public List<ShoppingCart> getShoppingCartEntries(String email) {
-    return (List<ShoppingCart>)
-        entitymanager
+    return entitymanager
             .createQuery(
-                "SELECT c FROM ShoppingCart c WHERE c.email = ?1 ORDER BY c.uuid") // keep fixed
-                                                                                   // order for
-                                                                                   // usability
+                // keep fixed order for usability
+                "SELECT c FROM ShoppingCart c WHERE c.email = ?1 ORDER BY c.uuid")
             .setParameter(1, email)
             .getResultList();
+  }
+
+  public double getTotalPrice(String email) {
+    return (Double) entitymanager
+        .createQuery("SELECT CAST(sum(c.amount * c.article.sellingPrice) as float) FROM ShoppingCart c WHERE c.email = ?1")
+        .setParameter(1, email)
+        .getSingleResult();
+  }
+
+  public double getTotalDiscount(String email) {
+    return (Double) entitymanager
+            .createQuery("SELECT CAST(sum(c.amount * (c.article.listPrice -  c.article.sellingPrice)) as float) FROM ShoppingCart c WHERE c.email = ?1")
+            .setParameter(1, email)
+            .getSingleResult();
   }
 
   @Transactional
