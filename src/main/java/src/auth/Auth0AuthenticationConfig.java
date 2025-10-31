@@ -7,6 +7,10 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import lombok.Getter;
 
+/**
+ * Container class to store required auth0 parameters
+ */
+
 @ApplicationScoped
 @Getter
 public class Auth0AuthenticationConfig {

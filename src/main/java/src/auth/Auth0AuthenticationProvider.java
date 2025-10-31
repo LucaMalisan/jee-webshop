@@ -6,6 +6,10 @@ import com.auth0.jwk.JwkProviderBuilder;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 
+/**
+ * Factory class for an AuthenticationController
+ */
+
 @ApplicationScoped
 public class Auth0AuthenticationProvider {
 

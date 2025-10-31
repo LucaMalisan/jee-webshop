@@ -21,6 +21,13 @@ public class AuthController {
 
   @Inject private UserRepository repository;
 
+  /**
+   * Find cookie in request by name
+   *
+   * @param request: request
+   * @param name: cookie name
+   * @return cookie value
+   */
   public String getCookieByName(HttpServletRequest request, String name) {
     if (request.getCookies() != null) {
       return Arrays.stream(request.getCookies())
@@ -32,6 +39,12 @@ public class AuthController {
     return null;
   }
 
+  /**
+   * Parse email out of jwt
+   *
+   * @param idToken id-token obtained from auth0
+   * @return parsed email
+   */
   public String extractEmail(String idToken) {
     try {
       DecodedJWT jwt = JWT.decode(idToken);
@@ -42,11 +55,23 @@ public class AuthController {
     }
   }
 
+  /**
+   * Parse email out of request
+   *
+   * @param request: request
+   * @return parsed email
+   */
   public String extractEmail(HttpServletRequest request) {
     String idToken = this.getCookieByName(request, "jwt");
     return this.extractEmail(idToken);
   }
 
+  /**
+   * Parse email out of request and check if it exist and is validated
+   *
+   * @param request: request
+   * @return result of check
+   */
   public boolean mailExistsAndIsConfirmed(HttpServletRequest request) {
     String email = this.extractEmail(request);
 
@@ -59,6 +84,12 @@ public class AuthController {
     return user.isConfirmed();
   }
 
+  /**
+   * Helper-method to dynamically assemble base URL of application by request
+   *
+   * @param request: requet
+   * @return dynamic base URL
+   */
   public String getBaseURL(HttpServletRequest request) {
     return String.format(
         "%s://%s:%d%s/application",

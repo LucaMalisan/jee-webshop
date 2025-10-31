@@ -16,7 +16,7 @@
         <c:choose>
             <c:when test="#{authController.mailExistsAndIsConfirmed(request)}">
                 <table class="shopping-cart">
-                    <ui:repeat value="#{articleController.getShoppingCartEntries(request)}" var="entry">
+                    <ui:repeat value="#{shoppingCartController.getShoppingCartEntries(request)}" var="entry">
                         <tr>
                             <td>
                                 <img class="small-image" src="#{entry.getArticle().getPrimaryImageURL()}" alt="image-url"/>

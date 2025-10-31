@@ -24,11 +24,22 @@ public class CategoryController {
   @Inject private CategoryRepository repository;
   @Inject private RequestLifecycle requestLifecycle;
 
+  /**
+   * Find all available categories
+   *
+   * @return all categories
+   */
   public Map<String, String> getCategories() {
     return repository.getCategories().stream()
         .collect(Collectors.toMap(Category::getCategoryName, Category::getUuid));
   }
 
+  /**
+   * Find category model for given category or subcategory uuid
+   *
+   * @param request: request
+   * @return category model
+   */
   public Category getSelectedMainCategory(HttpServletRequest request) {
     String subcategoryUuid = request.getParameter("subcategoryUuid");
     String categoryUuid = request.getParameter("categoryUuid");
@@ -42,6 +53,12 @@ public class CategoryController {
     }
   }
 
+  /**
+   * Find subcategory for given uuid, else find all subcategories for given main category uuid
+   *
+   * @param request: request
+   * @return list of subcategories
+   */
   public List<Subcategory> getSubcategories(HttpServletRequest request) {
     String subcategoryUuid = request.getParameter("subcategoryUuid");
 

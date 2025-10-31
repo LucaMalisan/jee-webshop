@@ -5,6 +5,10 @@ import jakarta.security.enterprise.credential.Credential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStore;
 
+/**
+ * Validator for user credentials
+ */
+
 @ApplicationScoped
 public class Auth0JwtIdentityStore implements IdentityStore {
 

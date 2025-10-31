@@ -5,6 +5,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.security.enterprise.credential.Credential;
 import lombok.Getter;
 
+/**
+ * Container class for auth-principal
+ */
+
 public class Auth0JwtCredential implements Credential {
 
     @Getter

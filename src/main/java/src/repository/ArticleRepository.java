@@ -21,6 +21,14 @@ public class ArticleRepository {
 
   @PersistenceContext EntityManager entitymanager;
 
+  /**
+   * Find all articles
+   *
+   * @param categoryUuidStr main category uuid
+   * @param subcategoryUuidStr subcategory uuid
+   * @param query search term
+   * @return list of matching articles
+   */
   public List<Article> getArticles(
       String categoryUuidStr, String subcategoryUuidStr, String query) {
     CriteriaBuilder cb = entitymanager.getCriteriaBuilder();
@@ -30,25 +38,35 @@ public class ArticleRepository {
 
     cq.select(article);
 
+    // if main category uuid is provided, join via subcategory to main category
     if (!StringUtils.isEmpty(categoryUuidStr)) {
       Join<Article, Subcategory> subcategoryJoin = article.join("subcategory");
       predicates.add(cb.equal(subcategoryJoin.get("rootCategoryUuid"), categoryUuidStr));
     }
 
+    // filter after subcategory uuid if provided
     if (!StringUtils.isEmpty(subcategoryUuidStr)) {
       predicates.add(cb.equal(article.get("subcategoryUuid"), subcategoryUuidStr));
     }
 
+    // full text search after title
     if (!StringUtils.isEmpty(query)) {
       predicates.add(cb.like(cb.lower(article.get("title")), "%" + query.toLowerCase() + "%"));
     }
 
+    // build where clause out of single predicates
     cq = cq.where(predicates.toArray(new Predicate[0]));
     TypedQuery<Article> q = entitymanager.createQuery(cq);
 
     return q.getResultList();
   }
 
+  /**
+   * Find article by sku
+   *
+   * @param sku article sku
+   * @return matching article
+   */
   public Article findBySku(long sku) {
     TypedQuery<Article> query =
         entitymanager.createQuery("SELECT a FROM Article a WHERE a.sku = ?1", Article.class);
@@ -57,6 +75,7 @@ public class ArticleRepository {
     try {
       return query.getSingleResult();
     } catch (Exception e) {
+      // none or several results found
       return null;
     }
   }

@@ -31,7 +31,7 @@
 
     <a href="#{authController.getBaseURL(request)}/shopping-cart" id="go-to-cart">
         <span class="material-symbols-outlined big-icon">shopping_cart</span>
-        <div class="circle accent-background" id="cart-count"> #{articleController.getShoppingCartEntries(request).size()} </div>
+        <div class="circle accent-background" id="cart-count"> #{shoppingCartController.getShoppingCartEntries(request).size()} </div>
     </a>
 
     <script>

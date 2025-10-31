@@ -17,6 +17,10 @@ import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Handling callback workflow
+ */
+
 @ApplicationScoped
 @AutoApplySession
 public class Auth0AuthenticationMechanism implements HttpAuthenticationMechanism {

@@ -15,8 +15,6 @@ import src.model.ShoppingCart;
 import src.repository.ArticleRepository;
 import src.repository.ShoppingCartRepository;
 
-// TODO use PostConstruct
-
 @Named
 @RequestScoped
 @SuppressWarnings("unused")
@@ -25,12 +23,11 @@ public class ArticleController {
   @Inject private ArticleRepository repository;
   @Inject private ShoppingCartRepository cartRepository;
   @Inject private RequestLifecycle requestLifecycle;
+  @Inject private ShoppingCartRepository shoppingCartRepository;
 
   @Getter private Article articleDetail;
   private List<Article> articles;
   private static final double PAGE_SIZE = 12;
-  @Inject private ShoppingCartRepository shoppingCartRepository;
-  @Named @Inject private AuthController authController;
 
   /**
    * Calculates the highest page available based upon the result set of articles
@@ -85,14 +82,14 @@ public class ArticleController {
     return this.getPageByRequest(request) < this.getTotalPageCount(request);
   }
 
+  /**
+   * Use to cache article-detail to retrieve it later from JSF
+   *
+   * @param request: request
+   */
   public void setArticleDetail(HttpServletRequest request) {
     long sku = Long.parseLong(request.getParameter("sku"));
     this.articleDetail = repository.findBySku(sku);
-  }
-
-  public List<ShoppingCart> getShoppingCartEntries(HttpServletRequest request) {
-    String email = authController.extractEmail(request);
-    return shoppingCartRepository.getShoppingCartEntries(email);
   }
 
   /**
@@ -106,13 +103,19 @@ public class ArticleController {
 
     try {
       page = Integer.parseInt(request.getParameter("page"));
-    } catch (Exception e) {
+    } catch (Exception ignored) {
     }
 
     // return parsed page, but it must be at least 1
     return Math.max(page, 1);
   }
 
+  /**
+   * Parses the search form data out of the request
+   *
+   * @param request: request
+   * @return list of matching articles
+   */
   private List<Article> getAllArticlesByRequest(HttpServletRequest request) {
     String categoryUuid = request.getParameter("categoryUuid");
     String subcategoryUuid = request.getParameter("subcategoryUuid");

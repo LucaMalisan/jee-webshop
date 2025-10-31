@@ -12,6 +12,12 @@ public class UserRepository {
 
   @PersistenceContext EntityManager entitymanager;
 
+  /**
+   * find user by login email
+   *
+   * @param email email
+   * @return matching user
+   */
   public User findByEmail(String email) {
     TypedQuery<User> query =
         entitymanager.createQuery("SELECT a FROM User a WHERE a.email = ?1", User.class);
@@ -24,6 +30,12 @@ public class UserRepository {
     }
   }
 
+  /**
+   * find user by confirmation key
+   *
+   * @param confirmKey confirmation key
+   * @return matching user
+   */
   public User findByConfirmedKey(String confirmKey) {
     TypedQuery<User> query =
         entitymanager.createQuery("SELECT a FROM User a WHERE a.confirmKey = ?1", User.class);
@@ -36,11 +48,21 @@ public class UserRepository {
     }
   }
 
+  /**
+   * Save model
+   *
+   * @param user model
+   */
   @Transactional
   public void save(User user) {
     entitymanager.persist(user);
   }
 
+  /**
+   * Update model
+   *
+   * @param user model
+   */
   @Transactional
   public void merge(User user) {
     entitymanager.merge(user);

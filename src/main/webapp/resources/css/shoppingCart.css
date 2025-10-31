@@ -33,6 +33,10 @@ div.price-calculation {
   align-self: end;
 }
 
-div.price-calculation p, div.price-calculation h3 {
+div.price-calculation p {
   margin: 0;
+}
+
+div.price-calculation h3 {
+  margin: 15px 0 0;
 }
