@@ -130,4 +130,51 @@ class AuthControllerTest {
     // Assert
     assertFalse(result);
   }
+
+  @Test
+  void testGetCookieByName_CookieExists_ReturnsValue() {
+    // Arrange
+    HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+    AuthController authController = new AuthController();
+
+    Cookie[] cookies = {new Cookie("jwt", "valid.jwt.token"), new Cookie("session", "session_id")};
+    when(mockRequest.getCookies()).thenReturn(cookies);
+
+    // Act
+    String result = authController.getCookieByName(mockRequest, "jwt");
+
+    // Assert
+    assertTrue(result.equals("valid.jwt.token"));
+  }
+
+  @Test
+  void testGetCookieByName_CookieNotExists_ReturnsNull() {
+    // Arrange
+    HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+    AuthController authController = new AuthController();
+
+    Cookie[] cookies = {new Cookie("session", "session_id")};
+    when(mockRequest.getCookies()).thenReturn(cookies);
+
+    // Act
+    String result = authController.getCookieByName(mockRequest, "jwt");
+
+    // Assert
+    assertTrue(result == null);
+  }
+
+  @Test
+  void testGetCookieByName_NoCookies_ReturnsNull() {
+    // Arrange
+    HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+    AuthController authController = new AuthController();
+
+    when(mockRequest.getCookies()).thenReturn(null);
+
+    // Act
+    String result = authController.getCookieByName(mockRequest, "jwt");
+
+    // Assert
+    assertTrue(result == null);
+  }
 }
