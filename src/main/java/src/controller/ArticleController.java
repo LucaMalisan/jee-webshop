@@ -9,25 +9,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.Getter;
-import org.eclipse.krazo.lifecycle.RequestLifecycle;
 import src.model.Article;
-import src.model.ShoppingCart;
 import src.repository.ArticleRepository;
-import src.repository.ShoppingCartRepository;
 
 @Named
 @RequestScoped
 @SuppressWarnings("unused")
 public class ArticleController {
 
-  @Inject private ArticleRepository repository;
-  @Inject private ShoppingCartRepository cartRepository;
-  @Inject private RequestLifecycle requestLifecycle;
-  @Inject private ShoppingCartRepository shoppingCartRepository;
+  private ArticleRepository repository;
+
+    public ArticleController() {}
+
+  @Inject
+  public ArticleController(ArticleRepository repository) {
+    this.repository = repository;
+  }
 
   @Getter private Article articleDetail;
-  private List<Article> articles;
-  private static final double PAGE_SIZE = 12;
+  @Getter private List<Article> articles;
+  @Getter private static final double PAGE_SIZE = 12;
 
   /**
    * Calculates the highest page available based upon the result set of articles
@@ -36,7 +37,7 @@ public class ArticleController {
    */
   public int getTotalPageCount(HttpServletRequest request) {
     List<Article> articles = getAllArticlesByRequest(request);
-    return (int) Math.ceil(articles.size() / PAGE_SIZE);
+    return articles == null ? 1 : (int) Math.max(Math.ceil(articles.size() / PAGE_SIZE), 1);
   }
 
   /**
@@ -116,7 +117,7 @@ public class ArticleController {
    * @param request: request
    * @return list of matching articles
    */
-  private List<Article> getAllArticlesByRequest(HttpServletRequest request) {
+  List<Article> getAllArticlesByRequest(HttpServletRequest request) {
     String categoryUuid = request.getParameter("categoryUuid");
     String subcategoryUuid = request.getParameter("subcategoryUuid");
     String query = request.getParameter("query");

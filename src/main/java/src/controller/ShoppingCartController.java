@@ -4,30 +4,29 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.eclipse.krazo.lifecycle.RequestLifecycle;
-import src.model.Category;
 import src.model.ShoppingCart;
-import src.model.Subcategory;
-import src.repository.CategoryRepository;
 import src.repository.ShoppingCartRepository;
-import src.utils.StringUtils;
 
+@Getter
 @Named
 @RequestScoped
 @SuppressWarnings("unused")
 @NoArgsConstructor
 public class ShoppingCartController {
 
-  @Inject private ShoppingCartRepository repository;
   @Inject private ShoppingCartRepository shoppingCartRepository;
   @Named @Inject private AuthController authController;
 
   private static final double VAT = 0.07;
+
+  public ShoppingCartController(ShoppingCartRepository shoppingCartRepository, AuthController authController) {
+    this.shoppingCartRepository = shoppingCartRepository;
+    this.authController = authController;
+  }
 
   /**
    * Retrieve all shopping cart entires
@@ -37,6 +36,11 @@ public class ShoppingCartController {
    */
   public List<ShoppingCart> getShoppingCartEntries(HttpServletRequest request) {
     String email = authController.extractEmail(request);
+
+    if(email == null) {
+      return new ArrayList<>();
+    }
+
     return shoppingCartRepository.getShoppingCartEntries(email);
   }
 

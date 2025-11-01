@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.eclipse.krazo.lifecycle.RequestLifecycle;
 import src.model.Category;
@@ -15,6 +16,7 @@ import src.model.Subcategory;
 import src.repository.CategoryRepository;
 import src.utils.StringUtils;
 
+@Getter
 @Named
 @RequestScoped
 @SuppressWarnings("unused")

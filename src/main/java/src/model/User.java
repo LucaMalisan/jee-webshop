@@ -23,4 +23,12 @@ public class User implements Serializable {
 
   @Column(name = "confirmed")
   private boolean confirmed;
+
+  public User() {}
+
+  public User(String email, String confirmKey, boolean confirmed) {
+    this.email = email;
+    this.confirmKey = confirmKey;
+    this.confirmed = confirmed;
+  }
 }

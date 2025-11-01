@@ -24,6 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 import javax.transaction.Transactional;
+import lombok.Getter;
 import lombok.extern.java.Log;
 import src.auth.Auth0AuthenticationConfig;
 import src.auth.AuthMailSender;
@@ -35,6 +36,7 @@ import src.repository.ShoppingCartRepository;
 import src.repository.UserRepository;
 
 /** Main class for all rest-api routes */
+@Getter
 @Controller
 @RequestScoped
 @Log

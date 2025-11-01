@@ -11,15 +11,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
+import lombok.Getter;
 import src.model.User;
 import src.repository.UserRepository;
 
+@Getter
 @Named
 @RequestScoped
 @SuppressWarnings("unused")
 public class AuthController {
 
-  @Inject private UserRepository repository;
+  private UserRepository repository;
+
+  public AuthController() {}
+
+  @Inject
+  public AuthController(UserRepository repository) {
+    this.repository = repository;
+  }
 
   /**
    * Find cookie in request by name
@@ -81,7 +90,7 @@ public class AuthController {
 
     User user = repository.findByEmail(email);
 
-    return user.isConfirmed();
+    return user != null && user.isConfirmed();
   }
 
   /**
