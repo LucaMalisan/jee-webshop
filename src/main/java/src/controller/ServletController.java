@@ -194,6 +194,11 @@ public class ServletController {
     try {
       long sku = Long.parseLong(skuStr);
       String email = new AuthController().extractEmail(request);
+
+      if (email == null) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+
       Article article = articleRepository.findBySku(sku);
 
       // amount can't exceed current stock
@@ -234,6 +239,11 @@ public class ServletController {
       @PathParam("amount") String amountStr, @PathParam("sku") String skuStr) {
     long sku = Long.parseLong(skuStr);
     String email = new AuthController().extractEmail(request);
+
+    if (email == null) {
+      return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
     ShoppingCart shoppingCart = shoppingCartRepository.findBySkuAndEmail(sku, email);
 
     // amount can't exceed current stock
@@ -253,6 +263,12 @@ public class ServletController {
   @DELETE
   @Path("/shopping-cart/delete-entry/{uuid}")
   public Response deleteEntry(@PathParam("uuid") String entryUuidStr) {
+    String email = new AuthController().extractEmail(request);
+
+    if (email == null) {
+      return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
     shoppingCartRepository.deleteByUuid(entryUuidStr);
 
     return Response.ok().build();
