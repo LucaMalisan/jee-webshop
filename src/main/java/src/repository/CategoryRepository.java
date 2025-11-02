@@ -4,10 +4,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import java.util.Collections;
+import jakarta.transaction.Transactional;
 import java.util.List;
-import src.model.Category;
 import src.model.Subcategory;
+import src.model.Category;
 
 @ApplicationScoped
 public class CategoryRepository {
@@ -75,5 +75,71 @@ public class CategoryRepository {
             "SELECT a FROM Subcategory a WHERE a.rootCategoryUuid = ?1", Subcategory.class);
     query.setParameter(1, uuidStr);
     return query.getResultList();
+  }
+
+  /**
+   * Save entity
+   *
+   * @param category entity
+   */
+  @Transactional
+  public void save(Category category) {
+    entitymanager.persist(category);
+  }
+
+  /**
+   * Update entity
+   *
+   * @param category entity
+   */
+  @Transactional
+  public void merge(Category category) {
+    entitymanager.merge(category);
+  }
+
+  /**
+   * Delete entity
+   *
+   * @param uuid category uuid
+   */
+  @Transactional
+  public void deleteByUuid(String uuid) {
+    entitymanager
+        .createQuery("DELETE FROM Category a WHERE a.uuid = ?1")
+        .setParameter(1, uuid)
+        .executeUpdate();
+  }
+
+  /**
+   * Save entity
+   *
+   * @param subcategory entity
+   */
+  @Transactional
+  public void save(Subcategory subcategory) {
+    entitymanager.persist(subcategory);
+  }
+
+  /**
+   * Update entity
+   *
+   * @param subcategory entity
+   */
+  @Transactional
+  public void merge(Subcategory subcategory) {
+    entitymanager.merge(subcategory);
+  }
+
+  /**
+   * Delete entity
+   *
+   * @param uuid subcategory uuid
+   */
+  @Transactional
+  public void deleteBySubcategoryUuid(String uuid) {
+    entitymanager
+            .createQuery("DELETE FROM Subcategory a WHERE a.uuid = ?1")
+            .setParameter(1, uuid)
+            .executeUpdate();
   }
 }

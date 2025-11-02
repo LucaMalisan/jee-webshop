@@ -24,11 +24,11 @@ public class Article implements Serializable {
   @Column(name = "description")
   private String description;
 
-  //price with discount
+  // price with discount
   @Column(name = "sellingPrice")
   private Double sellingPrice;
 
-  //price without discount
+  // price without discount
   @Column(name = "listPrice")
   private Double listPrice;
 
@@ -41,15 +41,16 @@ public class Article implements Serializable {
   @Column(name = "subcategory_uuid")
   private String subcategoryUuid;
 
-  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "subcategory_uuid", insertable = false, updatable = false)
   private Subcategory subcategory;
 
-  @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST)
+  @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
   private List<ArticleImage> imageList;
 
   /**
    * Get discount of article in percent
+   *
    * @return formatted discount
    */
   public String getDiscountPercent() {
@@ -57,12 +58,13 @@ public class Article implements Serializable {
       return null;
     }
 
-    //100 - percentage of selling price relative to list price
+    // 100 - percentage of selling price relative to list price
     return Math.round((100 - (this.getSellingPrice() / this.getListPrice()) * 100)) + "";
   }
 
   /**
    * Format article price with two decimal places and CHF currency
+   *
    * @return formatted price
    */
   public String formatPrice() {
@@ -74,12 +76,14 @@ public class Article implements Serializable {
 
   /**
    * Get url of main article image
+   *
    * @return image url
    */
-
   public String getPrimaryImageURL() {
     Optional<ArticleImage> optImage =
-        this.getImageList().stream().filter(e -> e.getPosition() == 1).findAny();
+        this.getImageList().stream()
+            .filter(e -> e.getPosition() != null && e.getPosition() == 1)
+            .findAny();
     return optImage.map(ArticleImage::getImageURL).orElse("");
   }
 }

@@ -13,7 +13,7 @@ CREATE TABLE subcategory
 (
    uuid               VARCHAR(36) PRIMARY KEY DEFAULT gen_random_uuid(),
    category_name      VARCHAR(37) NOT NULL,
-   root_category_uuid      VARCHAR(36) REFERENCES category(uuid)
+   root_category_uuid      VARCHAR(36) REFERENCES category(uuid) ON DELETE CASCADE
 );
 
 CREATE TABLE article
@@ -25,13 +25,13 @@ CREATE TABLE article
     listPrice    FLOAT,
     available    BOOLEAN,
     stock        INT,
-    subcategory_uuid      VARCHAR(36) REFERENCES subcategory(uuid)
+    subcategory_uuid      VARCHAR(36) REFERENCES subcategory(uuid)  ON DELETE CASCADE
 );
 
 CREATE TABLE article_image
 (
     uuid        VARCHAR(36) PRIMARY KEY DEFAULT gen_random_uuid(),
-    article_sku BIGINT NOT NULL REFERENCES article(sku),
+    article_sku BIGINT NOT NULL REFERENCES article(sku) ON DELETE CASCADE,
     image_url   VARCHAR(257),
     position    INTEGER
 );
@@ -44,9 +44,9 @@ CREATE TABLE user_data (
 
 CREATE TABLE shopping_cart (
     uuid        VARCHAR(36) PRIMARY KEY DEFAULT gen_random_uuid(),
-    email       VARCHAR(255) NOT NULL REFERENCES user_data(email),
-    article_sku BIGINT NOT NULL REFERENCES article(sku),
-    amount      BIGINT NOT NULL ,
+    email       VARCHAR(255) NOT NULL REFERENCES user_data(email) ON DELETE CASCADE,
+    article_sku BIGINT NOT NULL REFERENCES article(sku)  ON DELETE CASCADE,
+    amount      BIGINT NOT NULL
 )
 
 INSERT INTO category(category_name) VALUES ('Clothing');

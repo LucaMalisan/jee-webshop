@@ -1,6 +1,7 @@
 package src.repository;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.CacheRetrieveMode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -14,11 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import src.model.Article;
-import src.model.ShoppingCart;
+import src.model.ArticleImage;
 import src.model.Subcategory;
 import src.utils.StringUtils;
 
 @ApplicationScoped
+@Transactional
 public class ArticleRepository {
 
   @PersistenceContext EntityManager entitymanager;
@@ -70,12 +72,9 @@ public class ArticleRepository {
    * @return matching article
    */
   public Article findBySku(long sku) {
-    TypedQuery<Article> query =
-        entitymanager.createQuery("SELECT a FROM Article a WHERE a.sku = ?1", Article.class);
-    query.setParameter("1", sku);
-
     try {
-      return query.getSingleResult();
+      entitymanager.getEntityManagerFactory().getCache().evictAll();
+      return entitymanager.find(Article.class, sku);
     } catch (Exception e) {
       // none or several results found
       return null;
@@ -85,7 +84,7 @@ public class ArticleRepository {
   /**
    * Save entity
    *
-   * @param shoppingCart entity
+   * @param article entity
    */
   @Transactional
   public void save(Article article) {
@@ -95,7 +94,7 @@ public class ArticleRepository {
   /**
    * Update entity
    *
-   * @param shoppingCart entity
+   * @param article entity
    */
   @Transactional
   public void merge(Article article) {
@@ -105,13 +104,46 @@ public class ArticleRepository {
   /**
    * Delete entity
    *
-   * @param uuidStr uuid of entity
+   * @param sku article sku
    */
   @Transactional
-  public void deleteByUuid(String uuidStr) {
+  public void deleteBySku(String sku) {
     entitymanager
-            .createQuery("DELETE FROM Article a WHERE a.uuid = ?1")
-            .setParameter(1, uuidStr)
-            .executeUpdate();
+        .createQuery("DELETE FROM Article a WHERE a.sku = ?1")
+        .setParameter(1, Long.parseLong(sku))
+        .executeUpdate();
+  }
+
+  /**
+   * Save entity
+   *
+   * @param articleImage entity
+   */
+  @Transactional
+  public void save(ArticleImage articleImage) {
+    entitymanager.persist(articleImage);
+  }
+
+  /**
+   * Update entity
+   *
+   * @param articleImage entity
+   */
+  @Transactional
+  public void merge(ArticleImage articleImage) {
+    entitymanager.merge(articleImage);
+  }
+
+  /**
+   * Delete entity
+   *
+   * @param uuid articleImage uuid
+   */
+  @Transactional
+  public void deleteByArticleImageUuid(String uuid) {
+    entitymanager
+        .createQuery("DELETE FROM ArticleImage a WHERE a.uuid = ?1")
+        .setParameter(1, uuid)
+        .executeUpdate();
   }
 }
