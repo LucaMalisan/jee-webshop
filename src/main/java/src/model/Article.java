@@ -41,11 +41,11 @@ public class Article implements Serializable {
   @Column(name = "subcategory_uuid")
   private String subcategoryUuid;
 
-  @ManyToOne
+  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinColumn(name = "subcategory_uuid", insertable = false, updatable = false)
   private Subcategory subcategory;
 
-  @OneToMany(mappedBy = "article")
+  @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST)
   private List<ArticleImage> imageList;
 
   /**

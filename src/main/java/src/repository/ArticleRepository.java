@@ -9,10 +9,12 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 import src.model.Article;
+import src.model.ShoppingCart;
 import src.model.Subcategory;
 import src.utils.StringUtils;
 
@@ -78,5 +80,38 @@ public class ArticleRepository {
       // none or several results found
       return null;
     }
+  }
+
+  /**
+   * Save entity
+   *
+   * @param shoppingCart entity
+   */
+  @Transactional
+  public void save(Article article) {
+    entitymanager.persist(article);
+  }
+
+  /**
+   * Update entity
+   *
+   * @param shoppingCart entity
+   */
+  @Transactional
+  public void merge(Article article) {
+    entitymanager.merge(article);
+  }
+
+  /**
+   * Delete entity
+   *
+   * @param uuidStr uuid of entity
+   */
+  @Transactional
+  public void deleteByUuid(String uuidStr) {
+    entitymanager
+            .createQuery("DELETE FROM Article a WHERE a.uuid = ?1")
+            .setParameter(1, uuidStr)
+            .executeUpdate();
   }
 }

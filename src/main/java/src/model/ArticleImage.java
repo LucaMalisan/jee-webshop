@@ -1,5 +1,6 @@
 package src.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +31,7 @@ public class ArticleImage {
   @Column(name = "position")
   private Integer position;
 
-  @ManyToOne
+  @ManyToOne()
   @JoinColumn(name = "article_sku", insertable = false, updatable = false)
   private Article article;
 }

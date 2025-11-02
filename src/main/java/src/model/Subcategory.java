@@ -25,7 +25,7 @@ public class Subcategory implements Serializable {
   @OneToMany(mappedBy = "subcategory")
   private List<Article> articleList;
 
-  @ManyToOne
+  @ManyToOne(cascade =  {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinColumn(name = "root_category_uuid", insertable = false, updatable = false)
   private Category rootCategory;
 }
