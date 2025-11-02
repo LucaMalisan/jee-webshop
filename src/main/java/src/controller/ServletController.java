@@ -255,7 +255,7 @@ public class ServletController {
   }
 
   /**
-   * Delete entry from shopoing cart
+   * Delete entry from shopping cart
    *
    * @param entryUuidStr uuid of shopping cart database entry
    * @return 200 when finished
