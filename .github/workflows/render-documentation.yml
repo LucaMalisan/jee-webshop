@@ -38,7 +38,7 @@ jobs:
           skip_dirty_check: true
   render-swagger:
     runs-on: ubuntu-latest
-    environment: no-rule
+    environment: github-pages
     steps:
       - name: Checkout
         uses: actions/checkout@v4
