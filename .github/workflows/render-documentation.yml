@@ -27,17 +27,14 @@ jobs:
   render-swagger:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Swagger ui action
-        id: swagger-ui-action
-        uses: pjoc-team/swagger-ui-action@v0.0.2
+      - name: Generate Swagger UI
+        uses: Legion2/swagger-ui-action@v1
         with:
-          dir: './swagger'
-          pattern: '*.yaml'
-          debug: 'true'
+          output: swagger-ui
+          spec-file: swagger/documentation.yaml
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: '${{ secrets.GH_TOKEN }}'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: swagger-ui
