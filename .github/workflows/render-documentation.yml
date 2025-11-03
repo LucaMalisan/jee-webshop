@@ -10,6 +10,8 @@ permissions:
 jobs:
   build_latex:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v4
@@ -31,6 +33,7 @@ jobs:
           commit_author: Author <actions@github.com>
           status_options: '--untracked-files=no'
           skip_dirty_check: true
+
   build_swagger:
     runs-on: ubuntu-latest
     environment:
@@ -41,7 +44,7 @@ jobs:
      - name: Generate Docs
        uses: msayson/openapi-github-pages-action@v2
        with:
-         api-configs: '[{"openapi-json-filepath":"swagger/documentation.json","api-doc-filepath":"index.html"}]'
+         api-configs: '[{"branch":"gh-pages", "openapi-json-filepath":"swagger/documentation.json","api-doc-filepath":"index.html"}]'
          api-docs-dir: "docs"
 
      - name: Deploy to GitHub Pages
