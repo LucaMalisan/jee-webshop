@@ -1,5 +1,12 @@
 name: Render documentation
-on: [push]
+on: [ push ]
+
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build_latex:
     runs-on: ubuntu-latest
@@ -24,17 +31,20 @@ jobs:
           commit_author: Author <actions@github.com>
           status_options: '--untracked-files=no'
           skip_dirty_check: true
-  render-swagger:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate Swagger UI
-        uses: Legion2/swagger-ui-action@v1
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate and Deploy API Docs
+        uses: msayson/openapi-github-pages-action@v2
         with:
-          output: swagger-ui
-          spec-file: './swagger/documentation.yaml'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: swagger-ui
+          api-configs: |
+            [
+              {
+                "openapi-yaml-filepath": "swagger/documentation.yaml",  # Pfad zu deiner YAML-Datei
+                "api-doc-filepath": "index.html"  # Name der generierten HTML-Datei
+              }
+            ]
+          api-docs-dir: "docs"  # Ordner für die Ausgabe (wird deployt)
