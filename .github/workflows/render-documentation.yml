@@ -34,23 +34,13 @@ jobs:
   build_swagger:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+     - uses: actions/checkout@v4
 
-      - name: Install yq (YAML to JSON Converter)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y yq
+     - name: Generate Docs
+       uses: msayson/openapi-github-pages-action@v2
+       with:
+         api-configs: '[{"openapi-json-filepath":"swagger/documentation.json","api-doc-filepath":"index.html"}]'
+         api-docs-dir: "docs"
 
-      - name: Convert YAML to JSON
-        run: |
-          mkdir -p docs
-          yq eval -o=json swagger/documentation.yaml > docs/spec.json
-
-      - name: Generate Docs
-        uses: msayson/openapi-github-pages-action@v2
-        with:
-          api-configs: '[{"openapi-json-filepath":"docs/spec.json","api-doc-filepath":"index.html"}]'
-          api-docs-dir: "docs"
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+     - name: Deploy to GitHub Pages
+       uses: actions/deploy-pages@v4
