@@ -16,7 +16,7 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: arc42/documentation.text
+          root_file: arc42/documentation.tex
       - name: Upload PDF file
         uses: actions/upload-artifact@v4
         with:
@@ -40,11 +40,5 @@ jobs:
       - name: Generate and Deploy API Docs
         uses: msayson/openapi-github-pages-action@v2
         with:
-          api-configs: |
-            [
-              {
-                "openapi-yaml-filepath": "swagger/documentation.yaml",  # Pfad zu deiner YAML-Datei
-                "api-doc-filepath": "index.html"  # Name der generierten HTML-Datei
-              }
-            ]
-          api-docs-dir: "docs"  # Ordner für die Ausgabe (wird deployt)
+          api-configs: '[{"openapi-yaml-filepath": "swagger/documentation.yaml", "api-doc-filepath": "index.html"}]'
+          api-docs-dir: "docs"
