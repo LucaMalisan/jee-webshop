@@ -1,0 +1,43 @@
+name: Render documentation
+on: [push]
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v4
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: arc42/documentation.text
+      - name: Upload PDF file
+        uses: actions/upload-artifact@v4
+        with:
+          name: ARC42 Documentation
+          path: arc42_documentation.pdf
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Automated Change
+          branch: master
+          commit_options: '--no-verify --signoff'
+          commit_author: Author <actions@github.com>
+          status_options: '--untracked-files=no'
+          skip_dirty_check: true
+  render-swagger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Swagger ui action
+        id: swagger-ui-action
+        uses: pjoc-team/swagger-ui-action@v0.0.2
+        with:
+          dir: './swagger'
+          pattern: '*.yaml'
+          debug: 'true'
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: swagger-ui
