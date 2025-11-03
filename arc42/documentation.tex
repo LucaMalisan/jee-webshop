@@ -1,0 +1,301 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={arc42 Template},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{fullpage} 
+\usepackage{caption}
+\usepackage{float}
+
+\title{JEE Webshop Dokumentation}
+\author{Luca Malisan}
+\date{2025}
+
+\begin{document}
+\maketitle
+
+\section{}
+
+\hypertarget{section-introduction-and-goals}{%
+\section{Einführung und Ziele}\label{section-introduction-and-goals}}
+
+\hypertarget{_aufgabenstellung}{%
+\subsection{Aufgabenstellung}\label{_aufgabenstellung}}
+Bei dem zu entwickelnden System handelt es sich um einen Webshop. Dieser besteht aus den folgenden Komponenten:
+\begin{itemize}
+\item K: Digitaler Katalog aller Produkte
+\item D: Detailansicht jedes produkts
+\item W: Warenkorb
+\item L: Login
+\item R: Rest-API zur Anbindung externer Systeme
+\end{itemize}
+
+Im Produktkatalog müssen Einträge per Volltextsuche gefunden werden können (K1). Zudem muss die Menge der Resultate nach Haupt- und Subkategorie eingeschränkt werden können (K2). Jeder Eintrag in der Liste muss Artikelbild, Titel, Preis, Rabatt und Verfügbarkeit anzeigen (K3). Pro Seite muss die Anzahl Einträge limitiert werden, Navigation zwischen den Seiten muss möglich sein (K4). Durch Klick auf einen Eintrag muss die Detailseite geöffnet werden. (K5)  \\ \\
+Auf der Detailansicht müssen zusätzlich zum Listeneintrag alle anderen Bilder und die Beschreibung sowie die verfügbare Anzahl angezeigt werden (D1). Zudem muss ein Button angezeigt werden, um den Artikel zum Warenkorb zu hinzufügen. Die Anzahl muss hierbei einstellbar sein (D2). \\ \\
+Der Warenkorb muss einen Überblick über alle hinzugefügten Artikel bieten (W1). Die Anzahl jedes Artikels muss angepasst werden können bzw. Artikel müssen entfernt werden können (W2). Der Gesamtpreis mit und ohne Mwst. sowie Rabatte müssen ebenfalls angezeigt werden (W3). \\ \\
+Benutzer müssen über einen Login-Button auf die Login-Page gelangen (L1). Unautorisierte Benutzer können alle Artikel ansehen, um etwas zum Warenkorb hinzuzufügen wird aber ein Login verlangt (L2). Das Login muss dabei in einem separaten Login-Formular stattfinden (L3). Die eingegebene E-Mail muss durch eine Bestätigungsmail validiert werden (L4). \\ \\
+Für das Hinzufügen, Updaten und Löschen von Artikeln und Kategorien muss eine REST-API zur Verfügung gestellt werden (R1). Diese darf nur von authentifizierten Maschinen angesteuert werden (R2). 
+
+\hypertarget{_qualit_tsziele}{%
+\subsection{Qualitätsziele}\label{_qualit_tsziele}}
+
+Für eine gute Usability muss der Webshop in Tests mit Testkunden mindestens 90\% Zufriedenheit erreichen. Um eine optimale Performance zu garantieren, darf jede Operation im Webshop (Website laden, Artikel zum Warenkorb hinzufügen, ...) maximal 500ms dauern. Zudem müssen alle Methoden, die Business-Logik enthalten, mit mindestens einem Unit-Test abgesichert werden. \\ \\
+Unautorisierte Zugriffe müssen verhindert werden. Sowohl der Code als auch die verwendeten Dependencies dürfen keine Sicherheitslücken aufweisen. Für die Verständlichkeit des Codes müssen sämtliche Methoden und REST-Schnittstellen dokumentiert sein. Bei den redundanten Daten im Webshop, die aus angebundenen Systemen stammen, muss der Ursprung eindeutig nachvollziehbar sein.  
+
+\hypertarget{section-context-and-scope}{%
+\section{Kontextabgrenzung}\label{section-context-and-scope}}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=300pt]{images/Bild001868.png}
+\caption{Technischer Kontext}
+\end{figure}
+
+\hypertarget{section-solution-strategy}{%
+\section{Lösungsstrategie}\label{section-solution-strategy}}
+
+\textbf{Inhalt}
+
+Für die Entwicklung des Systems wurden die folgenden zentralen Entscheidungen getroffen:
+
+\begin{itemize}
+\item Da das Projekt aus Sicht der Funktionalität relativ schlank ist, soll die Projektgrösse auf das nötige Minimum reduziert werden. So kann eine niedrige Komplexität und eine hohe Performance erreicht werden.
+\item Um die korrekte Funktionalität der Applikation sicherzustellen, muss die Business-Logik nach jeder Änderung getestet werden.  
+\item Um Sicherheitslücken zu verhindern und den Datenschutz einzuhalten, darf es zu keinen unautorisierten Zugriffen auf Daten kommen. Benutzer dürfen nur auf öffentliche und ihre eigenen Daten zugreifen, Änderungen an den Stammdaten nur durch berechtigte Applikationen erfolgen.  
+\item Login- und Checkout-Prozess des Webshops sind hinsichtlich Datenschutz und Sicherheit am kritischsten, weshalb diese an eine externe Software delegiert wird. Es gibt hierfür bereits umfangreiche, standardisierte Lösungen.  
+\end{itemize}
+
+\hypertarget{section-building-block-view}{%
+\section{Bausteinsicht}\label{section-building-block-view}}
+
+Das System besteht aus den folgenden physischen und logischen Komponenten:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=400pt]{images/Bild001869.png}
+\caption{Systemaufbau}
+\end{figure}
+
+\subsection{Kontextabgrenzung}
+\begin{itemize}
+\item ERP-System: Im ERP-System werden die Artikeldaten und Kategorien verwaltet. Die Daten werden regelmässig mit dem Webshop synchronisiert. 
+\item Checkout Prozess: Der Kunde wird vom Webshop aus auf das Checkout-System weitergeleitet
+\item Auth0: Der Kunde wird vom Webshop auf den Login-Screen von Auth0 weitergeleitet. Nach erfolgreicher Eingabe seiner Daten gelangt er wieder zurück und die Daten werden verarbeitet
+\item Der Benutzer interagiert mit dem GUI des Webshops
+\end{itemize}
+
+\subsection{Ebene 1}
+\begin{itemize}
+\item Rest-Komponente: REST-Schnittstelle zur Synchronisation der Datenbasis mit angebundenen Systemen
+\item Auth-Komponente: Sicherstellung autorisierter Zugriffe
+\item Business-Logic-Komponente: Setzt die eigentliche Funktion des Webshops um
+\end{itemize}
+
+\subsection{Ebene 2}
+\begin{itemize}
+\item Request-Filter: überprüft die Authentifizierung bei Zugriff auf REST-Schnittstellen
+\item JWT-Validator: validiert JWT
+\item Auth0 Flow Handler: koordiniert die nötigen Aktionen für das Auth0 Login
+\item Mail Sender: erstellt ein Bestätigungsmail und sendet es ab
+\item Model - View - Controller: Umsetzung des MVC Patterns
+\end{itemize}
+
+
+\hypertarget{section-runtime-view}{%
+\section{Laufzeitsicht}\label{section-runtime-view}}
+
+\hypertarget{__emphasis_bezeichnung_laufzeitszenario_1_emphasis}{%
+\subsection{Login Flow}\label{__emphasis_bezeichnung_laufzeitszenario_1_emphasis}}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=300pt]{images/Bild001870.png}
+\caption{Login-Flow Sequenzdiagramm}
+\end{figure}
+
+\hypertarget{__emphasis_bezeichnung_laufzeitszenario_2_emphasis}{%
+\subsection{REST-API Call}\label{__emphasis_bezeichnung_laufzeitszenario_2_emphasis}}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=400pt]{images/Bild001873.png}
+\caption{REST-API Call Sequenzdiagramm}
+\end{figure}
+
+\hypertarget{__emphasis_bezeichnung_laufzeitszenario_n_emphasis}{%
+\subsection{Rendern der Artikeldetail Ansicht}\label{__emphasis_bezeichnung_laufzeitszenario_n_emphasis}}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=400pt]{images/Bild001875.png}
+\caption{Sequenzdiagramm Artikeldetail Ansicht}
+\end{figure}
+
+\pagebreak
+
+\hypertarget{section-deployment-view}{%
+\section{Verteilungssicht}\label{section-deployment-view}}
+
+\begin{figure}[H]
+\centering\includegraphics[width=200pt]{images/Bild001876.png}
+\caption{Verteilungsdiagramm Webshop}
+\end{figure}
+
+\hypertarget{section-concepts}{%
+\section{Querschnittliche Konzepte}\label{section-concepts}}
+
+\subsection{Architektur \& Patterns}
+\begin{itemize}
+\item Das Projekt wird mit reinem Jakarta EE und Java Server Faces umgesetzt. Sämtliche verwendete Dependencies müssen framework-unabhängig sein. 
+\item Aufgrund der kleinen Grösse des System wird ein klassischer monolithischer Ansatz gewählt, um die Komplexität niedrig zu halten und Ladezeiten zu minimieren. 
+\item Gemäss dem Jakarta-EE Standard wird eine Three-Tier-Architektur aus Datenbank, Backend und Frontend gewählt. 
+\item Die Daten im Frontend werden nach dem MVC-Pattern berechnet und angezeigt
+\end{itemize}
+
+\subsection{Entwicklung}
+\begin{itemize}
+\item Mit Mockito und JUnit werden die Methoden mit Business-Logik durch Unit-Tests abgesichert. 
+\end{itemize}
+
+\subsection{Sicherheit}
+\begin{itemize}
+\item Um die REST-API abzusichern, wird M2M-Authentifizierung von Auth0 verwendet. Das Login von Benutzern wird ebenfalls mit Auth0 umgesetzt
+\item Da Benutzer nur auf ihre eigenen Daten zugreifen können, müssen die Daten des Warenkorbs eindeutig einem Benutzer zugeordnet werden können. Deshalb wird dafür ein Login verlangt.
+\end{itemize}
+
+\subsection{Deployment}
+\begin{itemize}
+\item Als Build-Tool wird Maven verwendet. Damit wird die Applikation als JAR-File gebaut. 
+\item Die Applikation läuft als Container auf der Google Cloud. Als Webserver kommt Glassfish zum Einsatz, der das JAR-File als Web-Anwendung zur Verfügung stellt. 
+\item Als Datenbank wird PostgreSQL verwendet, die in der CloudSQL-Umgebung läuft.
+\end{itemize}
+
+\hypertarget{section-quality-scenarios}{%
+\section{Qualitätsanforderungen}\label{section-quality-scenarios}}
+
+\hypertarget{_qualit_tsbaum}{%
+\subsection{Qualitätsbaum}\label{_qualit_tsbaum}}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=300pt]{images/Bild001882.png}
+\caption{}
+\end{figure}
+
+\hypertarget{_qualit_tsszenarien}{%
+\subsection{Qualitätsszenarien}\label{_qualit_tsszenarien}}
+\begin{itemize}
+\item Der Kunde führt eine beliebige Operation im Webshop aus. Die Wartezeit, bis die Operation vollständig abgeschlossen ist, darf maximal 500ms betragen. 
+\item Ein Benutzer versucht, manuell über die REST-API des Webshops Daten zu verändern. Die Anfrage muss in jedem Fall abgelehnt werden und die Aktion darf nicht ausgeführt werden.
+\item Ein Benutzer versucht, auf die Warenkorbdaten eines anderen Benutzers zuzugreifen. Dies darf ohne Logindaten des entsprechenden Benutzers nicht möglich sein. 
+\item Ein Entwickler muss eine Änderung an der Navigation zwischen den Artikelseiten umsetzen. Durch die ausführliche Dokumentation geschieht hat er eine niedrige Lernkurve und implementiert die Anforderung korrekt. 
+\item Eine neue Quelle für Stammdaten muss an den Webshop angeschlossen werden. Durch die ausführliche Dokumentation der API kann dies mit niedriger Lernkurve umgesetzt werden.
+\item Ein unerfahrener Mitarbeiter setzt eine Änderung am Webshop um und führt dabei einen Bug ein. Die entsprechenden Unit-Tests schlagen fehl und sorgen dafür, dass der fehlerhafte Code nicht in der Produktion landet. 
+\end{itemize}
+
+\hypertarget{section-technical-risks}{%
+\section{Risiken und technische
+Schulden}\label{section-technical-risks}}
+
+Folgende Risiken und technische Schulden existieren im Projekt, geordnet nach Priorität:
+\begin{itemize}
+\item Anbindung an geeignetes Checkout-System: Aktuell ist der Webshop nur bis zum Warenkorb umgesetzt, für einen produktiven Einsatz muss der Checkout-Prozess noch angebunden werden
+\item Skalierbarer Maildienst: Aktuell verwendet der Webshop den normalen SMTP-Server von Gmail. Für einen flächendeckenden Einsatz sollte ein Email Service Provider wie MailJet eingesetzt werden.
+\item Verwendung von Frontend-Libraries: Aktuell ist das Frontend eher einfach gehalten und basiert auf standardisierten HTML-Elementen. In einer späteren Version kann das GUI durch den Einsatz von Frontend-Libraries modernisiert werden.
+\item Skalierung: Mit der Zunahme der Datenmengen und der gleichzeitigen Benutzer muss das Deployment Load Balancing unterstützen. Aktuell gibt es nur eine Instanz der Datenbank und Applikation.
+\end{itemize}
+
+\hypertarget{section-glossary}{%
+\section{Glossar}\label{section-glossary}}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.6667}}@{}}
+\toprule
+\begin{minipage}[b]{\linewidth}\raggedright
+Begriff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definition
+\end{minipage} \\
+\midrule
+\endhead
+Anbindung externer Systeme & eine andere Applikation interagiert greift autorisiert auf die REST-API des Webshops zu \\ \\
+Volltextsuche & es wird nach Artikel gesucht, deren Titel den Suchbegriff enthalten; am Anfang, in der Mitte oder am Ende  \\ \\
+Bestätigungsmail & eine E-Mail, die einen Link enthält, den man öffnen muss; damit bestätigt man, dass man die E-Mail erhalten und damit Zugriff auf das E-Mail Postfach hat. \\ \\
+Business-Logik & Funktionen des Webshops die nicht standardisiert sind. Nicht zur Business-Logik zählen beispielsweise Mathematik- oder CRUD-Funktionen. \\ \\
+Mail-Server & Server, der angefragt werden kann, um Mails zu verschicken \\ \\
+Checkout-Prozess & umfasst Eingabe von Lieferadresse und Zahlungsmethode \\ \\
+Login Callback & Bevor auf das Login-Formular von Auth0 umgeleitet wird, wird definiert, was ausgeführt werden soll, wenn der Request anschliessend wieder zurück auf den Webshop geht. Dies ist die Callback-Funktion. \\ \\
+Servlet-Route & Route, die verwendet werden, um Seiten oder deren Daten zu laden und anzuzeigen \\ \\
+Request Filter & ein Filter, der bei jedem Request überprüft, ob dieser zugelassaen werden soll \\ \\
+\bottomrule
+\end{longtable}
+
+\end{document}
