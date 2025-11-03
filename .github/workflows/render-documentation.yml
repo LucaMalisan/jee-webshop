@@ -33,6 +33,8 @@ jobs:
           skip_dirty_check: true
   build_swagger:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
     steps:
      - uses: actions/checkout@v4
 
