@@ -1,0 +1,58 @@
+@startuml
+hide circle
+
+entity article {
+  * sku: bigint
+  --
+  title: varchar(255)
+  description: text
+  sellingprice: double
+  listprice: double
+  available: boolean
+  stock: integer
+  * subcategory_uuid: varchar(36)
+}
+
+entity subcategory {
+  * uuid: String varchar(36)
+  --
+  category_name: varchar(255)
+  * root_category_uuid: varchar(36)
+}
+
+entity category {
+  * uuid: varchar(36)
+  --
+  category_name: varchar(255)
+}
+
+entity article_image {
+  * uuid: varchar(36)
+  --
+  article_sku: bigint
+  image_url: varchar(2048)
+  * article_sku: long
+}
+
+entity user_data {
+  * email: varchar(255)
+  --
+  confirm_key: varchar(36)
+  confirmed: boolean
+}
+
+entity shopping_cart {
+  * uuid: varchar(36)
+  --
+  * email: varchar(255)
+  * article_sku: bigint
+  amount: bigint
+}
+
+article }|--|| subcategory
+article ||--|{ article_image
+subcategory }|--|| category
+shopping_cart }|--|| user_data
+shopping_cart }|--|| article
+
+@enduml

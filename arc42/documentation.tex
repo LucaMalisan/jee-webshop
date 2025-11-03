@@ -109,6 +109,9 @@ Für das Hinzufügen, Updaten und Löschen von Artikeln und Kategorien muss eine
 Für eine gute Usability muss der Webshop in Tests mit Testkunden mindestens 90\% Zufriedenheit erreichen. Um eine optimale Performance zu garantieren, darf jede Operation im Webshop (Website laden, Artikel zum Warenkorb hinzufügen, ...) maximal 500ms dauern. Zudem müssen alle Methoden, die Business-Logik enthalten, mit mindestens einem Unit-Test abgesichert werden. \\ \\
 Unautorisierte Zugriffe müssen verhindert werden. Sowohl der Code als auch die verwendeten Dependencies dürfen keine Sicherheitslücken aufweisen. Für die Verständlichkeit des Codes müssen sämtliche Methoden und REST-Schnittstellen dokumentiert sein. Bei den redundanten Daten im Webshop, die aus angebundenen Systemen stammen, muss der Ursprung eindeutig nachvollziehbar sein.  
 
+\subsection{Vision}
+Mit dem Webshop soll eine Lösung vermarktet werden, die eigenständig und technologieunabhängig betrieben werden kann. Durch die einfache Wartbarkeit und hohe Anpassbarkeit können Kundenprojekte vergleichsweise günstig umgesetzt werden. Durch die Verwendung einer eigenen Datenbank lässt es sich zudem nahtlos in bestehende Umgebungen inregrieren. Dadurch bildet das Produkt eine sichere, universelle Standardlösung für Unternehmen aller Art und Grösse.
+
 \hypertarget{section-context-and-scope}{%
 \section{Kontextabgrenzung}\label{section-context-and-scope}}
 
@@ -167,6 +170,12 @@ Das System besteht aus den folgenden physischen und logischen Komponenten:
 \item Model - View - Controller: Umsetzung des MVC Patterns
 \end{itemize}
 
+\section{Datenbankmodell}
+\begin{figure}[H]
+\centering
+\includegraphics[width=300pt]{db/db_model.png}
+\caption{ERD Diagramm der Datenbank}
+\end{figure}
 
 \hypertarget{section-runtime-view}{%
 \section{Laufzeitsicht}\label{section-runtime-view}}
@@ -271,6 +280,10 @@ Folgende Risiken und technische Schulden existieren im Projekt, geordnet nach Pr
 \item Verwendung von Frontend-Libraries: Aktuell ist das Frontend eher einfach gehalten und basiert auf standardisierten HTML-Elementen. In einer späteren Version kann das GUI durch den Einsatz von Frontend-Libraries modernisiert werden.
 \item Skalierung: Mit der Zunahme der Datenmengen und der gleichzeitigen Benutzer muss das Deployment Load Balancing unterstützen. Aktuell gibt es nur eine Instanz der Datenbank und Applikation.
 \end{itemize}
+
+\section{Testing \& Abnahmekriterien}
+Die Business-Logik des Webshops wird mithilfe von Unit-Tests getestet. Für die REST-API wird ein Postman Script verwendet.
+Als Abnahmekriterium gilt, dass 100\% der Unit Tests erfolgreich sein müssen und alle Postman-Anfragen mit Status 200/201 erfolgen müssen
 
 \hypertarget{section-glossary}{%
 \section{Glossar}\label{section-glossary}}
