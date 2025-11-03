@@ -31,7 +31,7 @@ jobs:
           commit_author: Author <actions@github.com>
           status_options: '--untracked-files=no'
           skip_dirty_check: true
-  deploy:
+  build_swagger:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,7 +44,7 @@ jobs:
       - name: Convert YAML to JSON
         run: |
           mkdir -p docs
-          yq eval '.' swagger/documentation.yaml > docs/spec.json
+          yq eval -o=json swagger/documentation.yaml > docs/spec.json
 
       - name: Generate Docs
         uses: msayson/openapi-github-pages-action@v2
