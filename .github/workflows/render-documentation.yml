@@ -33,7 +33,6 @@ jobs:
           commit_author: Author <actions@github.com>
           status_options: '--untracked-files=no'
           skip_dirty_check: true
-
   render-swagger:
     runs-on: ubuntu-latest
     steps:
@@ -44,9 +43,9 @@ jobs:
         uses: Legion2/swagger-ui-action@v1
         with:
           output: swagger-ui
-          spec-file: swagger/documentation.json  # <-- Deine manuelle JSON!
+          spec-file: swagger/documentation.json
 
-      - name: Upload to GitHub Pages
+      - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: swagger-ui
