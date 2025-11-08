@@ -51,10 +51,16 @@ jobs:
           output: swagger-ui
           spec-file: swagger/documentation.json
 
+      - name: Prepare artifact (FLACH ins Root!)
+        run: |
+          mkdir -p swagger-artifact
+          # WICHTIG: Alles direkt ins Root kopieren, kein Unterordner!
+          cp -r swagger-ui/* swagger-artifact/
+
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./swagger
+          path: ./swagger-artifact
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
