@@ -5,9 +5,12 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.swing.text.html.Option;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.eclipse.krazo.lifecycle.RequestLifecycle;
@@ -33,7 +36,7 @@ public class CategoryController {
    */
   public Map<String, String> getCategories() {
     return repository.getCategories().stream()
-        .collect(Collectors.toMap(Category::getCategoryName, Category::getUuid));
+        .collect(HashMap::new, (m, v) -> m.put(v.getCategoryName(), v.getUuid()), HashMap::putAll);
   }
 
   /**
@@ -46,13 +49,9 @@ public class CategoryController {
     String subcategoryUuid = request.getParameter("subcategoryUuid");
     String categoryUuid = request.getParameter("categoryUuid");
 
-    if (!StringUtils.isEmpty(subcategoryUuid)) {
-      return repository.findSubcategoryByUuid(subcategoryUuid).getRootCategory();
-    } else if (!StringUtils.isEmpty(categoryUuid)) {
-      return repository.findByUuid(categoryUuid);
-    } else {
-      return null;
-    }
+    return Optional.ofNullable(repository.findSubcategoryByUuid(subcategoryUuid))
+        .map(Subcategory::getRootCategory)
+        .orElse(repository.findByUuid(categoryUuid));
   }
 
   /**
