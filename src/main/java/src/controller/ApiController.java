@@ -35,7 +35,7 @@ public class ApiController {
     }
   }
 
-  @POST
+  @PUT
   @Path("/update-article")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -81,7 +81,7 @@ public class ApiController {
     }
   }
 
-  @POST
+  @PUT
   @Path("/update-category")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -126,7 +126,7 @@ public class ApiController {
     }
   }
 
-  @POST
+  @PUT
   @Path("/update-subcategory")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -171,7 +171,7 @@ public class ApiController {
     }
   }
 
-  @POST
+  @PUT
   @Path("/update-article-image")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
