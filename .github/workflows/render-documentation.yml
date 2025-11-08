@@ -54,7 +54,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./swagger-ui
+          path: ./swagger
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
