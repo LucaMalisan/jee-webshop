@@ -41,9 +41,9 @@ public class AuthController {
   public String getCookieByName(HttpServletRequest request, String name) {
     if (request.getCookies() != null) {
       return Arrays.stream(request.getCookies())
-          .filter(e -> Objects.equals(e.getName(), name))
-          .map(Cookie::getValue)
+          .filter(e -> e != null && Objects.equals(e.getName(), name))
           .findFirst()
+          .map(Cookie::getValue)
           .orElse(null);
     }
     return null;
