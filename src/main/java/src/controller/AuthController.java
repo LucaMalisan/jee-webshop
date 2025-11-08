@@ -33,6 +33,7 @@ public class AuthController {
   /**
    * Find cookie in request by name
    *
+
    * @param request: request
    * @param name: cookie name
    * @return cookie value

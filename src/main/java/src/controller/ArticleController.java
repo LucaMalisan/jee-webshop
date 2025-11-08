@@ -19,7 +19,7 @@ public class ArticleController {
 
   private ArticleRepository repository;
 
-    public ArticleController() {}
+  public ArticleController() {}
 
   @Inject
   public ArticleController(ArticleRepository repository) {
@@ -55,10 +55,9 @@ public class ArticleController {
   }
 
   /**
-   * Calculates the page numbers to be shown in the navigation pane, based on given count.
-   * The page numbers should cover the spectrum around the given page, but may also return the numbers bigger or
-   * lower the given page in order to not exceed min or max page.
-   * If the page total count is too small, only give as many numbers as possible
+   * Calculates the page numbers to be shown in the navigation pane, based on given count. The page
+   * numbers should cover the spectrum around the given page in the interval [2 ; totalPageCount -
+   * 1] If the page total count is too small, only give as many numbers as possible
    *
    * @param request: HttpServletRequest
    * @param count: how many page numbers should be shown
@@ -75,10 +74,12 @@ public class ArticleController {
     // page count
     int highestNumber = Math.min(lowestNumber + correctCount, this.getTotalPageCount(request));
 
-    //re-calculation based on calculated highest number
+    // re-calculation based on calculated highest number
     lowestNumber = highestNumber - correctCount;
 
-    return IntStream.range(lowestNumber, lowestNumber + correctCount).boxed().collect(Collectors.toList());
+    return IntStream.range(lowestNumber, lowestNumber + correctCount)
+        .boxed()
+        .collect(Collectors.toList());
   }
 
   public boolean existsPreviousPage(HttpServletRequest request) {
@@ -112,6 +113,9 @@ public class ArticleController {
       page = Integer.parseInt(request.getParameter("page"));
     } catch (Exception ignored) {
     }
+
+    // page mustn't exceed total page count
+    page = Math.min(page, this.getTotalPageCount(request));
 
     // return parsed page, but it must be at least 1
     return Math.max(page, 1);
