@@ -25,11 +25,11 @@ public class Article implements Serializable {
   private String description;
 
   // price with discount
-  @Column(name = "sellingPrice")
+  @Column(name = "selling_price")
   private Double sellingPrice;
 
   // price without discount
-  @Column(name = "listPrice")
+  @Column(name = "list_price")
   private Double listPrice;
 
   @Column(name = "available")

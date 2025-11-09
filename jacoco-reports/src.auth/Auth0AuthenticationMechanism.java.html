@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Auth0AuthenticationMechanism.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jee-webshop</a> &gt; <a href="index.source.html" class="el_package">src.auth</a> &gt; <span class="el_source">Auth0AuthenticationMechanism.java</span></div><h1>Auth0AuthenticationMechanism.java</h1><pre class="source lang-java linenums">package src.auth;
+
+import com.auth0.AuthenticationController;
+import com.auth0.IdentityVerificationException;
+import com.auth0.Tokens;
+import io.github.cromat.JavaxRequest;
+import io.github.cromat.JavaxResponse;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.security.enterprise.AuthenticationException;
+import jakarta.security.enterprise.AuthenticationStatus;
+import jakarta.security.enterprise.authentication.mechanism.http.AutoApplySession;
+import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
+import jakarta.security.enterprise.authentication.mechanism.http.HttpMessageContext;
+import jakarta.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+/**
+ * Handling callback workflow
+ */
+
+@ApplicationScoped
+@AutoApplySession
+public class Auth0AuthenticationMechanism implements HttpAuthenticationMechanism {
+    private final AuthenticationController authenticationController;
+    private final IdentityStoreHandler identityStoreHandler;
+
+    @Inject
+<span class="nc" id="L31">    Auth0AuthenticationMechanism(AuthenticationController authenticationController, IdentityStoreHandler identityStoreHandler) {</span>
+<span class="nc" id="L32">        this.authenticationController = authenticationController;</span>
+<span class="nc" id="L33">        this.identityStoreHandler = identityStoreHandler;</span>
+<span class="nc" id="L34">    }</span>
+
+    @Override
+    public AuthenticationStatus validateRequest(HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse,
+            HttpMessageContext httpMessageContext) throws AuthenticationException {
+
+        // Exchange the code for the ID token, and notify container of result.
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (isCallbackRequest(httpServletRequest)) {</span>
+            try {
+<span class="nc" id="L44">                Tokens tokens = authenticationController.handle( new JavaxRequest(httpServletRequest), new JavaxResponse(httpServletResponse));</span>
+<span class="nc" id="L45">                Auth0JwtCredential auth0JwtCredential = new Auth0JwtCredential(tokens.getIdToken());</span>
+<span class="nc" id="L46">                CredentialValidationResult result = identityStoreHandler.validate(auth0JwtCredential);</span>
+<span class="nc" id="L47">                return httpMessageContext.notifyContainerAboutLogin(result);</span>
+<span class="nc" id="L48">            } catch (IdentityVerificationException e) {</span>
+<span class="nc" id="L49">                return httpMessageContext.responseUnauthorized();</span>
+            }
+        }
+<span class="nc" id="L52">        return httpMessageContext.doNothing();</span>
+    }
+
+    private boolean isCallbackRequest(HttpServletRequest request) {
+<span class="nc bnc" id="L56" title="All 4 branches missed.">        return request.getRequestURI().equals(&quot;/callback&quot;) &amp;&amp; request.getParameter(&quot;code&quot;) != null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

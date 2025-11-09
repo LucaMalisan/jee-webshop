@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Article.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jee-webshop</a> &gt; <a href="index.source.html" class="el_package">src.model</a> &gt; <span class="el_source">Article.java</span></div><h1>Article.java</h1><pre class="source lang-java linenums">package src.model;
+
+import jakarta.persistence.*;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+<span class="pc" id="L11">@Setter</span>
+@Entity
+@SuppressWarnings(&quot;unused&quot;)
+@Table(name = &quot;article&quot;)
+<span class="fc" id="L15">public class Article implements Serializable {</span>
+
+  @Id
+  @Column(name = &quot;sku&quot;, updatable = false, nullable = false)
+<span class="nc" id="L19">  private long sku;</span>
+
+  @Column(name = &quot;title&quot;)
+<span class="nc" id="L22">  private String title;</span>
+
+  @Column(name = &quot;description&quot;)
+<span class="nc" id="L25">  private String description;</span>
+
+  // price with discount
+  @Column(name = &quot;selling_price&quot;)
+<span class="fc" id="L29">  private Double sellingPrice;</span>
+
+  // price without discount
+  @Column(name = &quot;list_price&quot;)
+<span class="fc" id="L33">  private Double listPrice;</span>
+
+  @Column(name = &quot;available&quot;)
+<span class="nc" id="L36">  private Boolean available;</span>
+
+  @Column(name = &quot;stock&quot;)
+<span class="fc" id="L39">  private int stock;</span>
+
+  @Column(name = &quot;subcategory_uuid&quot;)
+<span class="nc" id="L42">  private String subcategoryUuid;</span>
+
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = &quot;subcategory_uuid&quot;, insertable = false, updatable = false)
+<span class="nc" id="L46">  private Subcategory subcategory;</span>
+
+  @OneToMany(mappedBy = &quot;article&quot;, cascade = CascadeType.ALL)
+<span class="fc" id="L49">  private List&lt;ArticleImage&gt; imageList;</span>
+
+  /**
+   * Get discount of article in percent
+   *
+   * @return formatted discount
+   */
+  public String getDiscountPercent() {
+<span class="fc bfc" id="L57" title="All 2 branches covered.">    if (this.getListPrice() == null) {</span>
+<span class="fc" id="L58">      return null;</span>
+    }
+
+    // 100 - percentage of selling price relative to list price
+<span class="fc" id="L62">    return Math.round((100 - (this.getSellingPrice() / this.getListPrice()) * 100)) + &quot;&quot;;</span>
+  }
+
+  /**
+   * Format article price with two decimal places and CHF currency
+   *
+   * @return formatted price
+   */
+  public String formatPrice() {
+<span class="fc bfc" id="L71" title="All 4 branches covered.">    if (this.getListPrice() != null &amp;&amp; this.available) {</span>
+<span class="fc" id="L72">      return String.format(&quot;%.2f was %.2f CHF&quot;, this.getSellingPrice(), this.getListPrice());</span>
+    }
+<span class="fc" id="L74">    return String.format(&quot;%.2f CHF&quot;, this.getSellingPrice());</span>
+  }
+
+  /**
+   * Get url of main article image
+   *
+   * @return image url
+   */
+  public String getPrimaryImageURL() {
+<span class="fc" id="L83">    Optional&lt;ArticleImage&gt; optImage =</span>
+<span class="fc" id="L84">        this.getImageList().stream()</span>
+<span class="fc bfc" id="L85" title="All 4 branches covered.">            .filter(e -&gt; e.getPosition() != null &amp;&amp; e.getPosition() == 1)</span>
+<span class="fc" id="L86">            .findAny();</span>
+<span class="fc" id="L87">    return optImage.map(ArticleImage::getImageURL).orElse(&quot;&quot;);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

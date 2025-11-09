@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CategoryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jee-webshop</a> &gt; <a href="index.source.html" class="el_package">src.controller</a> &gt; <span class="el_source">CategoryController.java</span></div><h1>CategoryController.java</h1><pre class="source lang-java linenums">package src.controller;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.swing.text.html.Option;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.eclipse.krazo.lifecycle.RequestLifecycle;
+import src.model.Category;
+import src.model.Subcategory;
+import src.repository.CategoryRepository;
+import src.utils.StringUtils;
+
+@Getter
+@Named
+@RequestScoped
+@SuppressWarnings(&quot;unused&quot;)
+<span class="fc" id="L26">@NoArgsConstructor</span>
+public class CategoryController {
+
+<span class="nc" id="L29">  @Inject private CategoryRepository repository;</span>
+<span class="nc" id="L30">  @Inject private RequestLifecycle requestLifecycle;</span>
+
+  /**
+   * Find all available categories
+   *
+   * @return all categories
+   */
+  public Map&lt;String, String&gt; getCategories() {
+<span class="fc" id="L38">    return repository.getCategories().stream()</span>
+<span class="fc" id="L39">        .collect(HashMap::new, (m, v) -&gt; m.put(v.getCategoryName(), v.getUuid()), HashMap::putAll);</span>
+  }
+
+  /**
+   * Find category model for given category or subcategory uuid
+   *
+   * @param request: request
+   * @return category model
+   */
+  public Category getSelectedMainCategory(HttpServletRequest request) {
+<span class="fc" id="L49">    String subcategoryUuid = request.getParameter(&quot;subcategoryUuid&quot;);</span>
+<span class="fc" id="L50">    String categoryUuid = request.getParameter(&quot;categoryUuid&quot;);</span>
+
+<span class="fc" id="L52">    return Optional.ofNullable(repository.findSubcategoryByUuid(subcategoryUuid))</span>
+<span class="fc" id="L53">        .map(Subcategory::getRootCategory)</span>
+<span class="fc" id="L54">        .orElse(repository.findByUuid(categoryUuid));</span>
+  }
+
+  /**
+   * Find subcategory for given uuid, else find all subcategories for given main category uuid
+   *
+   * @param request: request
+   * @return list of subcategories
+   */
+  public List&lt;Subcategory&gt; getSubcategories(HttpServletRequest request) {
+<span class="fc" id="L64">    String subcategoryUuid = request.getParameter(&quot;subcategoryUuid&quot;);</span>
+
+    // if a subcategory is selected, only show this one
+<span class="fc bfc" id="L67" title="All 2 branches covered.">    if (!StringUtils.isEmpty(subcategoryUuid)) {</span>
+<span class="fc" id="L68">      return Collections.singletonList(repository.findSubcategoryByUuid(subcategoryUuid));</span>
+    }
+
+    // only parent category is selected, show all corresponding subcategories
+<span class="fc" id="L72">    String categoryUuid = request.getParameter(&quot;categoryUuid&quot;);</span>
+<span class="fc" id="L73">    return repository.getSubcategoriesByRootCategoryUuid(categoryUuid);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

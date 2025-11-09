@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ShoppingCartRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jee-webshop</a> &gt; <a href="index.source.html" class="el_package">src.repository</a> &gt; <span class="el_source">ShoppingCartRepository.java</span></div><h1>ShoppingCartRepository.java</h1><pre class="source lang-java linenums">package src.repository;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
+import java.util.List;
+import src.model.ShoppingCart;
+
+@ApplicationScoped
+<span class="nc" id="L11">public class ShoppingCartRepository {</span>
+
+  @PersistenceContext EntityManager entitymanager;
+
+  /**
+   * Find all shopping cart entries belonging to user
+   *
+   * @param email user email
+   * @return shopping cart entries
+   */
+  public List&lt;ShoppingCart&gt; getShoppingCartEntries(String email) {
+<span class="nc" id="L22">    return entitymanager</span>
+<span class="nc" id="L23">        .createQuery(</span>
+            // keep fixed order for usability
+            &quot;SELECT c FROM ShoppingCart c WHERE c.email = ?1 ORDER BY c.uuid&quot;)
+<span class="nc" id="L26">        .setParameter(1, email)</span>
+<span class="nc" id="L27">        .getResultList();</span>
+  }
+
+  /**
+   * Get sum of all prices of articles in users shopping cart
+   *
+   * @param email user email
+   * @return total price
+   */
+  public double getTotalPrice(String email) {
+    // (quantity) * (price per quantity) of all articles added up
+<span class="nc" id="L38">    return (Double)</span>
+        entitymanager
+<span class="nc" id="L40">            .createQuery(</span>
+                &quot;SELECT CAST(sum(c.amount * c.article.sellingPrice) as float) FROM ShoppingCart c WHERE c.email = ?1&quot;)
+<span class="nc" id="L42">            .setParameter(1, email)</span>
+<span class="nc" id="L43">            .getSingleResult();</span>
+  }
+
+  /**
+   * Get sum of all discounts of articles in users shopping cart
+   *
+   * @param email user email
+   * @return total discount
+   */
+  public double getTotalDiscount(String email) {
+    // (quantity) * (difference between list price and selling price) of all articles added up
+<span class="nc" id="L54">    return (Double)</span>
+        entitymanager
+<span class="nc" id="L56">            .createQuery(</span>
+                &quot;SELECT CAST(sum(c.amount * (c.article.listPrice -  c.article.sellingPrice)) as float) FROM ShoppingCart c WHERE c.email = ?1&quot;)
+<span class="nc" id="L58">            .setParameter(1, email)</span>
+<span class="nc" id="L59">            .getSingleResult();</span>
+  }
+
+  /**
+   * Save entity
+   *
+   * @param shoppingCart entity
+   */
+  @Transactional
+  public void save(ShoppingCart shoppingCart) {
+<span class="nc" id="L69">    entitymanager.persist(shoppingCart);</span>
+<span class="nc" id="L70">  }</span>
+
+  /**
+   * Update entity
+   *
+   * @param shoppingCart entity
+   */
+  @Transactional
+  public void merge(ShoppingCart shoppingCart) {
+<span class="nc" id="L79">    entitymanager.merge(shoppingCart);</span>
+<span class="nc" id="L80">  }</span>
+
+  /**
+   * Delete entity
+   *
+   * @param uuidStr uuid of entity
+   */
+  @Transactional
+  public void deleteByUuid(String uuidStr) {
+<span class="nc" id="L89">    entitymanager</span>
+<span class="nc" id="L90">        .createQuery(&quot;DELETE FROM ShoppingCart c WHERE c.uuid = ?1&quot;)</span>
+<span class="nc" id="L91">        .setParameter(1, uuidStr)</span>
+<span class="nc" id="L92">        .executeUpdate();</span>
+<span class="nc" id="L93">  }</span>
+
+  /**
+   * Find specific entry with article and user email
+   *
+   * @param sku article sku
+   * @param email user email
+   * @return shopping cart entry
+   */
+  public ShoppingCart findBySkuAndEmail(Long sku, String email) {
+    try {
+<span class="nc" id="L104">      return (ShoppingCart)</span>
+          entitymanager
+<span class="nc" id="L106">              .createQuery(&quot;SELECT c FROM ShoppingCart c WHERE c.email = ?1 and c.articleSku = ?2&quot;)</span>
+<span class="nc" id="L107">              .setParameter(1, email)</span>
+<span class="nc" id="L108">              .setParameter(2, sku)</span>
+<span class="nc" id="L109">              .getSingleResult();</span>
+<span class="nc" id="L110">    } catch (Exception ex) {</span>
+      // none or several results found
+<span class="nc" id="L112">      return null;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

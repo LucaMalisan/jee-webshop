@@ -21,8 +21,8 @@ CREATE TABLE article
     sku          BIGINT PRIMARY KEY NOT NULL,
     title        VARCHAR(255),
     description  TEXT,
-    sellingPrice FLOAT,
-    listPrice    FLOAT,
+    selling_price FLOAT,
+    list_price    FLOAT,
     available    BOOLEAN,
     stock        INT,
     subcategory_uuid      VARCHAR(36) REFERENCES subcategory(uuid)  ON DELETE CASCADE

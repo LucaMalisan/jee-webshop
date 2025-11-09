@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jee-webshop</a> &gt; <a href="index.source.html" class="el_package">src.controller</a> &gt; <span class="el_source">AuthController.java</span></div><h1>AuthController.java</h1><pre class="source lang-java linenums">package src.controller;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
+import lombok.Getter;
+import src.model.User;
+import src.repository.UserRepository;
+
+@Getter
+@Named
+@RequestScoped
+@SuppressWarnings(&quot;unused&quot;)
+public class AuthController {
+
+<span class="nc" id="L24">  private UserRepository repository;</span>
+
+<span class="fc" id="L26">  public AuthController() {}</span>
+
+  @Inject
+<span class="fc" id="L29">  public AuthController(UserRepository repository) {</span>
+<span class="fc" id="L30">    this.repository = repository;</span>
+<span class="fc" id="L31">  }</span>
+
+  /**
+   * Find cookie in request by name
+   *
+
+   * @param request: request
+   * @param name: cookie name
+   * @return cookie value
+   */
+  public String getCookieByName(HttpServletRequest request, String name) {
+<span class="fc bfc" id="L42" title="All 2 branches covered.">    if (request.getCookies() != null) {</span>
+<span class="fc" id="L43">      return Arrays.stream(request.getCookies())</span>
+<span class="fc bfc" id="L44" title="All 4 branches covered.">          .filter(e -&gt; e != null &amp;&amp; Objects.equals(e.getName(), name))</span>
+<span class="fc" id="L45">          .findFirst()</span>
+<span class="fc" id="L46">          .map(Cookie::getValue)</span>
+<span class="fc" id="L47">          .orElse(null);</span>
+    }
+<span class="fc" id="L49">    return null;</span>
+  }
+
+  /**
+   * Parse email out of jwt
+   *
+   * @param idToken id-token obtained from auth0
+   * @return parsed email
+   */
+  public String extractEmail(String idToken) {
+    try {
+<span class="fc" id="L60">      DecodedJWT jwt = JWT.decode(idToken);</span>
+<span class="fc" id="L61">      Map&lt;String, Claim&gt; claims = jwt.getClaims();</span>
+<span class="fc" id="L62">      return claims.get(&quot;email&quot;).asString();</span>
+<span class="fc" id="L63">    } catch (Exception e) {</span>
+<span class="fc" id="L64">      return null;</span>
+    }
+  }
+
+  /**
+   * Parse email out of request
+   *
+   * @param request: request
+   * @return parsed email
+   */
+  public String extractEmail(HttpServletRequest request) {
+<span class="fc" id="L75">    String idToken = this.getCookieByName(request, &quot;jwt&quot;);</span>
+<span class="fc" id="L76">    return this.extractEmail(idToken);</span>
+  }
+
+  /**
+   * Parse email out of request and check if it exist and is validated
+   *
+   * @param request: request
+   * @return result of check
+   */
+  public boolean mailExistsAndIsConfirmed(HttpServletRequest request) {
+<span class="fc" id="L86">    String email = this.extractEmail(request);</span>
+
+<span class="fc bfc" id="L88" title="All 2 branches covered.">    if (email == null) {</span>
+<span class="fc" id="L89">      return false;</span>
+    }
+
+<span class="fc" id="L92">    User user = repository.findByEmail(email);</span>
+
+<span class="fc bfc" id="L94" title="All 4 branches covered.">    return user != null &amp;&amp; user.isConfirmed();</span>
+  }
+
+  /**
+   * Helper-method to dynamically assemble base URL of application by request
+   *
+   * @param request: requet
+   * @return dynamic base URL
+   */
+  public String getBaseURL(HttpServletRequest request) {
+<span class="fc" id="L104">    return String.format(</span>
+        &quot;%s://%s:%d%s/application&quot;,
+<span class="fc" id="L106">        request.getScheme(),</span>
+<span class="fc" id="L107">        request.getServerName(),</span>
+<span class="fc" id="L108">        request.getServerPort(),</span>
+<span class="fc" id="L109">        request.getContextPath());</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

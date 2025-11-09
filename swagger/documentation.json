@@ -54,7 +54,7 @@
       }
     },
     "/api/update-article": {
-      "post": {
+      "put": {
         "summary": "Update an article",
         "tags": [
           "article"
@@ -134,7 +134,7 @@
       }
     },
     "/api/update-article-image": {
-      "post": {
+      "put": {
         "summary": "Update an article image",
         "tags": [
           "article image"
@@ -214,7 +214,7 @@
       }
     },
     "/api/update-category": {
-      "post": {
+      "put": {
         "summary": "Update an category",
         "tags": [
           "category"
@@ -294,7 +294,7 @@
       }
     },
     "/api/update-subcategory": {
-      "post": {
+      "put": {
         "summary": "Update an subcategory",
         "tags": [
           "subcategory"

@@ -19,7 +19,7 @@ public class ArticleController {
 
   private ArticleRepository repository;
 
-    public ArticleController() {}
+  public ArticleController() {}
 
   @Inject
   public ArticleController(ArticleRepository repository) {
@@ -55,8 +55,9 @@ public class ArticleController {
   }
 
   /**
-   * Calculates the page numbers to be shown in the navigation pane, based on given count. The
-   * returned list follows the scheme [page-1, page, page+1, ...)
+   * Calculates the page numbers to be shown in the navigation pane, based on given count. The page
+   * numbers should cover the spectrum around the given page in the interval [2 ; totalPageCount -
+   * 1] If the page total count is too small, only give as many numbers as possible
    *
    * @param request: HttpServletRequest
    * @param count: how many page numbers should be shown
@@ -64,15 +65,21 @@ public class ArticleController {
    */
   public List<Integer> getPageNumbers(HttpServletRequest request, int count) {
     int page = this.getPageByRequest(request);
+    int correctCount = Math.min(count, this.getTotalPageCount(request) - 2);
 
     // lowest page number must at least be 2
     int lowestNumber = Math.max(2, page - 1);
 
     // highest number should have a distance of <count> to lowest number, but mustn't exceed total
     // page count
-    int highestNumber = Math.min(lowestNumber + count, this.getTotalPageCount(request));
+    int highestNumber = Math.min(lowestNumber + correctCount, this.getTotalPageCount(request));
 
-    return IntStream.range(lowestNumber, highestNumber).boxed().collect(Collectors.toList());
+    // re-calculation based on calculated highest number
+    lowestNumber = highestNumber - correctCount;
+
+    return IntStream.range(lowestNumber, lowestNumber + correctCount)
+        .boxed()
+        .collect(Collectors.toList());
   }
 
   public boolean existsPreviousPage(HttpServletRequest request) {
@@ -106,6 +113,9 @@ public class ArticleController {
       page = Integer.parseInt(request.getParameter("page"));
     } catch (Exception ignored) {
     }
+
+    // page mustn't exceed total page count
+    page = Math.min(page, this.getTotalPageCount(request));
 
     // return parsed page, but it must be at least 1
     return Math.max(page, 1);

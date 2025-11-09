@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jee-webshop</a> &gt; <a href="index.source.html" class="el_package">src.repository</a> &gt; <span class="el_source">UserRepository.java</span></div><h1>UserRepository.java</h1><pre class="source lang-java linenums">package src.repository;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
+import src.model.User;
+
+@ApplicationScoped
+<span class="nc" id="L11">public class UserRepository {</span>
+
+  @PersistenceContext EntityManager entitymanager;
+
+  /**
+   * find user by login email
+   *
+   * @param email email
+   * @return matching user
+   */
+  public User findByEmail(String email) {
+<span class="nc" id="L22">    TypedQuery&lt;User&gt; query =</span>
+<span class="nc" id="L23">        entitymanager.createQuery(&quot;SELECT a FROM User a WHERE a.email = ?1&quot;, User.class);</span>
+<span class="nc" id="L24">    query.setParameter(1, email);</span>
+
+    try {
+<span class="nc" id="L27">      return query.getSingleResult();</span>
+<span class="nc" id="L28">    } catch (Exception e) {</span>
+<span class="nc" id="L29">      return null;</span>
+    }
+  }
+
+  /**
+   * find user by confirmation key
+   *
+   * @param confirmKey confirmation key
+   * @return matching user
+   */
+  public User findByConfirmedKey(String confirmKey) {
+<span class="nc" id="L40">    TypedQuery&lt;User&gt; query =</span>
+<span class="nc" id="L41">        entitymanager.createQuery(&quot;SELECT a FROM User a WHERE a.confirmKey = ?1&quot;, User.class);</span>
+<span class="nc" id="L42">    query.setParameter(1, confirmKey);</span>
+
+    try {
+<span class="nc" id="L45">      return query.getSingleResult();</span>
+<span class="nc" id="L46">    } catch (Exception e) {</span>
+<span class="nc" id="L47">      return null;</span>
+    }
+  }
+
+  /**
+   * Save model
+   *
+   * @param user model
+   */
+  @Transactional
+  public void save(User user) {
+<span class="nc" id="L58">    entitymanager.persist(user);</span>
+<span class="nc" id="L59">  }</span>
+
+  /**
+   * Update model
+   *
+   * @param user model
+   */
+  @Transactional
+  public void merge(User user) {
+<span class="nc" id="L68">    entitymanager.merge(user);</span>
+<span class="nc" id="L69">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
