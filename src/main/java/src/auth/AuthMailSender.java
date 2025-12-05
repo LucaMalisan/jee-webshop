@@ -52,7 +52,7 @@ public class AuthMailSender {
     //provide link to user containing the confirmation key stored in database
     message.setText(
         String.format(
-            "Thanks for your registration at JEE webshop. Please confirm your email at %s/confirm-email/%s>here</a>",
+            "Thanks for your registration at JEE webshop. Please confirm your email at %s/confirm-email/%s",
             baseURL, user.getConfirmKey()));
 
     new Thread(

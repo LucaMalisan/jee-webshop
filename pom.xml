@@ -17,23 +17,7 @@
     <!-- Eclipse Krazo -->
     <krazo.version>3.0.1</krazo.version>
   </properties>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.eclipse.krazo</groupId>
-        <artifactId>krazo-core</artifactId>
-        <version>${krazo.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <dependencies>
-    <!-- https://mvnrepository.com/artifact/org.eclipse.parsson/parsson -->
-    <dependency>
-      <groupId>org.eclipse.parsson</groupId>
-      <artifactId>parsson</artifactId>
-      <version>1.1.6</version>
-    </dependency>
-
     <dependency>
       <groupId>jakarta.platform</groupId>
       <artifactId>jakarta.jakartaee-api</artifactId>
@@ -44,11 +28,6 @@
       <groupId>jakarta.mvc</groupId>
       <artifactId>jakarta.mvc-api</artifactId>
       <version>2.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.krazo</groupId>
-      <artifactId>krazo-core</artifactId>
-      <version>${krazo.version}</version>
     </dependency>
     <dependency>
       <groupId>jakarta.annotation</groupId>
@@ -77,12 +56,6 @@
       <groupId>javax</groupId>
       <artifactId>javaee-api</artifactId>
       <version>8.0.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.security.enterprise</groupId>
-      <artifactId>javax.security.enterprise-api</artifactId>
-      <version>1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

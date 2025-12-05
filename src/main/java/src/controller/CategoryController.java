@@ -9,11 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.swing.text.html.Option;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.eclipse.krazo.lifecycle.RequestLifecycle;
 import src.model.Category;
 import src.model.Subcategory;
 import src.repository.CategoryRepository;
@@ -27,7 +24,6 @@ import src.utils.StringUtils;
 public class CategoryController {
 
   @Inject private CategoryRepository repository;
-  @Inject private RequestLifecycle requestLifecycle;
 
   /**
    * Find all available categories
