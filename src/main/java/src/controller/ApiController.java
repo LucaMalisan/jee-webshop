@@ -18,6 +18,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,10 +37,8 @@ import src.repository.CategoryRepository;
 import src.repository.ShoppingCartRepository;
 import src.repository.UserRepository;
 
-/**
- * Central class for all REST api methods
- */
-
+/** Central class for all REST api methods */
+@Path("")
 @RequestScoped
 public class ApiController {
 
@@ -54,7 +54,7 @@ public class ApiController {
 
   // Article endpoints
   @POST
-  @Path("/api/add-article")
+  @Path("api/add-article")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response createArticle(Article article) {
@@ -69,7 +69,7 @@ public class ApiController {
   }
 
   @PUT
-  @Path("/api/update-article")
+  @Path("api/update-article")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateArticle(Article article) {
@@ -84,7 +84,7 @@ public class ApiController {
   }
 
   @DELETE
-  @Path("/api/delete-article/{sku}")
+  @Path("api/delete-article/{sku}")
   @Consumes(MediaType.TEXT_PLAIN)
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteArticle(@PathParam("sku") String sku) {
@@ -100,7 +100,7 @@ public class ApiController {
 
   // Category endpoints
   @POST
-  @Path("/api/add-category")
+  @Path("api/add-category")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response createCategory(Category category) {
@@ -115,7 +115,7 @@ public class ApiController {
   }
 
   @PUT
-  @Path("/api/update-category")
+  @Path("api/update-category")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateCategory(Category category) {
@@ -130,7 +130,7 @@ public class ApiController {
   }
 
   @DELETE
-  @Path("/api/delete-category/{uuid}")
+  @Path("api/delete-category/{uuid}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteCategory(@PathParam("uuid") String uuid) {
     try {
@@ -145,7 +145,7 @@ public class ApiController {
 
   // Subcategory endpoints
   @POST
-  @Path("/api/add-subcategory")
+  @Path("api/add-subcategory")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response createSubcategory(Subcategory subcategory) {
@@ -160,7 +160,7 @@ public class ApiController {
   }
 
   @PUT
-  @Path("/api/update-subcategory")
+  @Path("api/update-subcategory")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateSubcategory(Subcategory subcategory) {
@@ -175,7 +175,7 @@ public class ApiController {
   }
 
   @DELETE
-  @Path("/api/delete-subcategory/{uuid}")
+  @Path("api/delete-subcategory/{uuid}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteSubcategory(@PathParam("uuid") String uuid) {
     try {
@@ -190,7 +190,7 @@ public class ApiController {
 
   // ArticleImage endpoints
   @POST
-  @Path("/api/add-article-image")
+  @Path("api/add-article-image")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response createArticleImage(ArticleImage articleImage) {
@@ -205,7 +205,7 @@ public class ApiController {
   }
 
   @PUT
-  @Path("/api/update-article-image")
+  @Path("api/update-article-image")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateArticleImage(ArticleImage articleImage) {
@@ -220,7 +220,7 @@ public class ApiController {
   }
 
   @DELETE
-  @Path("/api/delete-article-image/{uuid}")
+  @Path("api/delete-article-image/{uuid}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteArticleImage(@PathParam("uuid") String uuid) {
     try {
@@ -273,6 +273,63 @@ public class ApiController {
             .build();
 
     return Response.seeOther(new URI(authURL)).build();
+  }
+
+  /**
+   * Redirect user to auth0 login page
+   *
+   * @return 303 to auth0 login page
+   */
+  @GET
+  @Path("/logout")
+  public void logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+    String callbackUrl = authController.getBaseURL(request) + "/logout-callback";
+
+    String logoutUrl =
+        String.format(
+            "https://%s/v2/logout?client_id=%s&returnTo=%s",
+            config.getDomain(), config.getClientId(), callbackUrl);
+
+    if (request.getSession() != null) {
+      request.getSession().invalidate();
+    }
+
+    if (request.getCookies() != null) {
+      Arrays.stream(request.getCookies())
+          .filter(e -> e != null && Objects.equals(e.getName(), "jwt"))
+          .forEach(
+              e -> {
+                e.setValue("");
+                e.setPath("/");
+                e.setMaxAge(0);
+                response.addCookie(e);
+              });
+    }
+
+    try {
+      response.sendRedirect(logoutUrl);
+    } catch (Exception e) {
+    }
+  }
+
+  @GET
+  @Path("/logout-callback")
+  public Response logoutCallback(
+      @Context HttpServletRequest request, @Context HttpServletResponse response) {
+    String baseURL = authController.getBaseURL(request);
+
+    Arrays.stream(request.getCookies())
+            .filter(e -> e.getName().equals("jwt"))
+            .forEach(e -> {
+              e.setMaxAge(0);
+              response.addCookie(e);
+            });
+
+    try {
+      return Response.seeOther(new URI(baseURL)).build();
+    } catch (Exception e) {
+      return null;
+    }
   }
 
   /**
@@ -404,7 +461,8 @@ public class ApiController {
     }
 
     ShoppingCart shoppingCart = shoppingCartRepository.findBySkuAndEmail(sku, email);
-    shoppingCart.setAmount(shoppingCartController.getMaxAmount(Long.parseLong(amountStr), shoppingCart));
+    shoppingCart.setAmount(
+        shoppingCartController.getMaxAmount(Long.parseLong(amountStr), shoppingCart));
     shoppingCartRepository.merge(shoppingCart);
 
     return Response.ok().build();
