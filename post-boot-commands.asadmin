@@ -1,0 +1,3 @@
+add-library /opt/payara/glassfish/lib/postgresql-42.7.8.jar
+create-jdbc-connection-pool --datasourceclassname=org.postgresql.ds.PGSimpleDataSource --restype=javax.sql.DataSource --property "DatabaseName=jee_webshop:Password=admin:PortNumber=5433:ServerName=host.docker.internal:User=postgres" PostgresPool
+create-jdbc-resource --enabled=true --poolname=PostgresPool jdbc/postgres_resource

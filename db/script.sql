@@ -40,14 +40,14 @@ CREATE TABLE user_data (
     email       VARCHAR(255) PRIMARY KEY,
     confirm_key VARCHAR(36) DEFAULT gen_random_uuid(),
     confirmed   BOOLEAN
-)
+);
 
 CREATE TABLE shopping_cart (
     uuid        VARCHAR(36) PRIMARY KEY DEFAULT gen_random_uuid(),
     email       VARCHAR(255) NOT NULL REFERENCES user_data(email) ON DELETE CASCADE,
     article_sku BIGINT NOT NULL REFERENCES article(sku)  ON DELETE CASCADE,
     amount      BIGINT NOT NULL
-)
+);
 
 INSERT INTO category(category_name) VALUES ('Clothing');
 INSERT INTO category(category_name) VALUES ('Sports & Outdoors');
