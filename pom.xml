@@ -17,7 +17,26 @@
     <!-- Eclipse Krazo -->
     <krazo.version>3.0.1</krazo.version>
   </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.eclipse.krazo</groupId>
+        <artifactId>krazo-core</artifactId>
+        <version>${krazo.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
+    <dependency>
+      <groupId>org.eclipse.krazo</groupId>
+      <artifactId>krazo-core</artifactId>
+      <version>${krazo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
+      <version>3.1.0</version>
+    </dependency>
     <dependency>
       <groupId>jakarta.platform</groupId>
       <artifactId>jakarta.jakartaee-api</artifactId>

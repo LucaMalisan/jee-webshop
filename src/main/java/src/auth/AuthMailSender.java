@@ -3,11 +3,8 @@ package src.auth;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 import java.util.Properties;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import lombok.extern.java.Log;
 import src.model.User;
-import javax.naming.Context;
 
 /**
  * Class to send account confirmation mail after first login
@@ -17,11 +14,9 @@ import javax.naming.Context;
 public class AuthMailSender {
 
   public void sendMail(User user, String baseURL)
-      throws NamingException, MessagingException {
-    Context env = (Context) new InitialContext().lookup("java:comp/env");
-
+      throws MessagingException {
     String to = user.getEmail();
-    String from = (String) env.lookup("email.address");
+    String from = System.getenv("EMAIL_ADDRESS");
 
     Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
@@ -35,11 +30,7 @@ public class AuthMailSender {
             props,
             new Authenticator() {
               protected PasswordAuthentication getPasswordAuthentication() {
-                try {
-                  return new PasswordAuthentication(from, (String) env.lookup("email.password"));
-                } catch (NamingException e) {
-                  throw new RuntimeException(e);
-                }
+                  return new PasswordAuthentication(from, System.getenv("EMAIL_PASSWORD"));
               }
             });
 
