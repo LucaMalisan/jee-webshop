@@ -23,7 +23,7 @@ jee-webshop,src.model,Category,0,17,0,0,0,4,0,5,0,5
 jee-webshop,src.model,User,26,10,0,0,7,3,5,3,5,3
 jee-webshop,src.model,Article,38,112,0,10,6,17,11,19,11,14
 jee-webshop,src.controller,ShoppingCartController,12,162,0,4,4,29,4,11,4,9
-jee-webshop,src.controller,ApiController,459,0,8,0,131,0,26,0,22,0
+jee-webshop,src.controller,ApiController,568,0,16,0,161,0,36,0,28,0
 jee-webshop,src.controller,AuthController,3,110,0,12,1,28,1,14,1,8
-jee-webshop,src.controller,CategoryController,6,65,0,2,2,13,2,6,2,5
+jee-webshop,src.controller,CategoryController,3,65,0,2,1,13,1,6,1,5
 jee-webshop,src.controller,ArticleController,6,175,0,6,2,36,2,16,2,13

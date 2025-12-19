@@ -18,6 +18,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,10 +37,8 @@ import src.repository.CategoryRepository;
 import src.repository.ShoppingCartRepository;
 import src.repository.UserRepository;
 
-/**
- * Central class for all REST api methods
- */
-
+/** Central class for all REST api methods */
+@Path(&quot;&quot;)
 @RequestScoped
 <span class="nc" id="L43">public class ApiController {</span>
 
@@ -54,7 +54,7 @@ import src.repository.UserRepository;
 
   // Article endpoints
   @POST
-  @Path(&quot;/api/add-article&quot;)
+  @Path(&quot;api/add-article&quot;)
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response createArticle(Article article) {
@@ -69,7 +69,7 @@ import src.repository.UserRepository;
   }
 
   @PUT
-  @Path(&quot;/api/update-article&quot;)
+  @Path(&quot;api/update-article&quot;)
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateArticle(Article article) {
@@ -84,7 +84,7 @@ import src.repository.UserRepository;
   }
 
   @DELETE
-  @Path(&quot;/api/delete-article/{sku}&quot;)
+  @Path(&quot;api/delete-article/{sku}&quot;)
   @Consumes(MediaType.TEXT_PLAIN)
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteArticle(@PathParam(&quot;sku&quot;) String sku) {
@@ -100,7 +100,7 @@ import src.repository.UserRepository;
 
   // Category endpoints
   @POST
-  @Path(&quot;/api/add-category&quot;)
+  @Path(&quot;api/add-category&quot;)
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response createCategory(Category category) {
@@ -115,7 +115,7 @@ import src.repository.UserRepository;
   }
 
   @PUT
-  @Path(&quot;/api/update-category&quot;)
+  @Path(&quot;api/update-category&quot;)
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateCategory(Category category) {
@@ -130,7 +130,7 @@ import src.repository.UserRepository;
   }
 
   @DELETE
-  @Path(&quot;/api/delete-category/{uuid}&quot;)
+  @Path(&quot;api/delete-category/{uuid}&quot;)
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteCategory(@PathParam(&quot;uuid&quot;) String uuid) {
     try {
@@ -145,7 +145,7 @@ import src.repository.UserRepository;
 
   // Subcategory endpoints
   @POST
-  @Path(&quot;/api/add-subcategory&quot;)
+  @Path(&quot;api/add-subcategory&quot;)
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response createSubcategory(Subcategory subcategory) {
@@ -160,7 +160,7 @@ import src.repository.UserRepository;
   }
 
   @PUT
-  @Path(&quot;/api/update-subcategory&quot;)
+  @Path(&quot;api/update-subcategory&quot;)
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateSubcategory(Subcategory subcategory) {
@@ -175,7 +175,7 @@ import src.repository.UserRepository;
   }
 
   @DELETE
-  @Path(&quot;/api/delete-subcategory/{uuid}&quot;)
+  @Path(&quot;api/delete-subcategory/{uuid}&quot;)
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteSubcategory(@PathParam(&quot;uuid&quot;) String uuid) {
     try {
@@ -190,7 +190,7 @@ import src.repository.UserRepository;
 
   // ArticleImage endpoints
   @POST
-  @Path(&quot;/api/add-article-image&quot;)
+  @Path(&quot;api/add-article-image&quot;)
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response createArticleImage(ArticleImage articleImage) {
@@ -205,7 +205,7 @@ import src.repository.UserRepository;
   }
 
   @PUT
-  @Path(&quot;/api/update-article-image&quot;)
+  @Path(&quot;api/update-article-image&quot;)
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateArticleImage(ArticleImage articleImage) {
@@ -220,7 +220,7 @@ import src.repository.UserRepository;
   }
 
   @DELETE
-  @Path(&quot;/api/delete-article-image/{uuid}&quot;)
+  @Path(&quot;api/delete-article-image/{uuid}&quot;)
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteArticleImage(@PathParam(&quot;uuid&quot;) String uuid) {
     try {
@@ -276,6 +276,63 @@ import src.repository.UserRepository;
   }
 
   /**
+   * Redirect user to auth0 login page
+   *
+   * @return 303 to auth0 login page
+   */
+  @GET
+  @Path(&quot;/logout&quot;)
+  public void logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+<span class="nc" id="L286">    String callbackUrl = authController.getBaseURL(request) + &quot;/logout-callback&quot;;</span>
+
+<span class="nc" id="L288">    String logoutUrl =</span>
+<span class="nc" id="L289">        String.format(</span>
+            &quot;https://%s/v2/logout?client_id=%s&amp;returnTo=%s&quot;,
+<span class="nc" id="L291">            config.getDomain(), config.getClientId(), callbackUrl);</span>
+
+<span class="nc bnc" id="L293" title="All 2 branches missed.">    if (request.getSession() != null) {</span>
+<span class="nc" id="L294">      request.getSession().invalidate();</span>
+    }
+
+<span class="nc bnc" id="L297" title="All 2 branches missed.">    if (request.getCookies() != null) {</span>
+<span class="nc" id="L298">      Arrays.stream(request.getCookies())</span>
+<span class="nc bnc" id="L299" title="All 4 branches missed.">          .filter(e -&gt; e != null &amp;&amp; Objects.equals(e.getName(), &quot;jwt&quot;))</span>
+<span class="nc" id="L300">          .forEach(</span>
+              e -&gt; {
+<span class="nc" id="L302">                e.setValue(&quot;&quot;);</span>
+<span class="nc" id="L303">                e.setPath(&quot;/&quot;);</span>
+<span class="nc" id="L304">                e.setMaxAge(0);</span>
+<span class="nc" id="L305">                response.addCookie(e);</span>
+<span class="nc" id="L306">              });</span>
+    }
+
+    try {
+<span class="nc" id="L310">      response.sendRedirect(logoutUrl);</span>
+<span class="nc" id="L311">    } catch (Exception e) {</span>
+<span class="nc" id="L312">    }</span>
+<span class="nc" id="L313">  }</span>
+
+  @GET
+  @Path(&quot;/logout-callback&quot;)
+  public Response logoutCallback(
+      @Context HttpServletRequest request, @Context HttpServletResponse response) {
+<span class="nc" id="L319">    String baseURL = authController.getBaseURL(request);</span>
+
+<span class="nc" id="L321">    Arrays.stream(request.getCookies())</span>
+<span class="nc" id="L322">            .filter(e -&gt; e.getName().equals(&quot;jwt&quot;))</span>
+<span class="nc" id="L323">            .forEach(e -&gt; {</span>
+<span class="nc" id="L324">              e.setMaxAge(0);</span>
+<span class="nc" id="L325">              response.addCookie(e);</span>
+<span class="nc" id="L326">            });</span>
+
+    try {
+<span class="nc" id="L329">      return Response.seeOther(new URI(baseURL)).build();</span>
+<span class="nc" id="L330">    } catch (Exception e) {</span>
+<span class="nc" id="L331">      return null;</span>
+    }
+  }
+
+  /**
    * Route to handle redirect from auth0 login
    *
    * @param request request
@@ -291,36 +348,36 @@ import src.repository.UserRepository;
       throws URISyntaxException, IdentityVerificationException {
 
     // extract email from given idToken
-<span class="nc" id="L294">    Tokens tokens =</span>
-<span class="nc" id="L295">        authenticationController.handle(new JavaxRequest(request), new JavaxResponse(response));</span>
-<span class="nc" id="L296">    AuthController authController = new AuthController();</span>
-<span class="nc" id="L297">    String idToken = tokens.getIdToken(); // JWT mit User-Claims</span>
-<span class="nc" id="L298">    String email = authController.extractEmail(idToken);</span>
-<span class="nc" id="L299">    String baseURL = authController.getBaseURL(request);</span>
+<span class="nc" id="L351">    Tokens tokens =</span>
+<span class="nc" id="L352">        authenticationController.handle(new JavaxRequest(request), new JavaxResponse(response));</span>
+<span class="nc" id="L353">    AuthController authController = new AuthController();</span>
+<span class="nc" id="L354">    String idToken = tokens.getIdToken(); // JWT mit User-Claims</span>
+<span class="nc" id="L355">    String email = authController.extractEmail(idToken);</span>
+<span class="nc" id="L356">    String baseURL = authController.getBaseURL(request);</span>
 
     try {
-<span class="nc" id="L302">      User emailConfirmed = repository.findByEmail(email);</span>
+<span class="nc" id="L359">      User emailConfirmed = repository.findByEmail(email);</span>
 
       // create entry if it doesn't exist (user is new)
-<span class="nc bnc" id="L305" title="All 2 branches missed.">      if (emailConfirmed == null) {</span>
-<span class="nc" id="L306">        emailConfirmed = new User();</span>
-<span class="nc" id="L307">        emailConfirmed.setEmail(email);</span>
-<span class="nc" id="L308">        emailConfirmed.setConfirmKey(UUID.randomUUID().toString());</span>
-<span class="nc" id="L309">        repository.save(emailConfirmed);</span>
+<span class="nc bnc" id="L362" title="All 2 branches missed.">      if (emailConfirmed == null) {</span>
+<span class="nc" id="L363">        emailConfirmed = new User();</span>
+<span class="nc" id="L364">        emailConfirmed.setEmail(email);</span>
+<span class="nc" id="L365">        emailConfirmed.setConfirmKey(UUID.randomUUID().toString());</span>
+<span class="nc" id="L366">        repository.save(emailConfirmed);</span>
 
         // send email with generated confirm key allowing to identify the correct entry on
         // confirmation link
-<span class="nc" id="L313">        new AuthMailSender().sendMail(emailConfirmed, baseURL);</span>
+<span class="nc" id="L370">        new AuthMailSender().sendMail(emailConfirmed, baseURL);</span>
       }
 
       // store cookie with jwt in request to retrieve it from everywhere
-<span class="nc" id="L317">      response.addCookie(new Cookie(&quot;jwt&quot;, idToken));</span>
-<span class="nc" id="L318">    } catch (Exception e) {</span>
-<span class="nc" id="L319">      Logger logger = Logger.getLogger(ApiController.class.getName());</span>
-<span class="nc" id="L320">      logger.log(Level.SEVERE, e.getMessage());</span>
-<span class="nc" id="L321">    }</span>
+<span class="nc" id="L374">      response.addCookie(new Cookie(&quot;jwt&quot;, idToken));</span>
+<span class="nc" id="L375">    } catch (Exception e) {</span>
+<span class="nc" id="L376">      Logger logger = Logger.getLogger(ApiController.class.getName());</span>
+<span class="nc" id="L377">      logger.log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L378">    }</span>
 
-<span class="nc" id="L323">    return Response.seeOther(new URI(baseURL)).build();</span>
+<span class="nc" id="L380">    return Response.seeOther(new URI(baseURL)).build();</span>
   }
 
   /**
@@ -332,10 +389,10 @@ import src.repository.UserRepository;
   @GET
   @Path(&quot;/confirm-email/{confirm-key}&quot;)
   public String confirmEmail(@PathParam(&quot;confirm-key&quot;) String confirmKey) {
-<span class="nc" id="L335">    User emailConfirmed = repository.findByConfirmedKey(confirmKey);</span>
-<span class="nc" id="L336">    emailConfirmed.setConfirmed(true);</span>
-<span class="nc" id="L337">    repository.merge(emailConfirmed);</span>
-<span class="nc" id="L338">    return &quot;emailConfirmed.xhtml&quot;;</span>
+<span class="nc" id="L392">    User emailConfirmed = repository.findByConfirmedKey(confirmKey);</span>
+<span class="nc" id="L393">    emailConfirmed.setConfirmed(true);</span>
+<span class="nc" id="L394">    repository.merge(emailConfirmed);</span>
+<span class="nc" id="L395">    return &quot;emailConfirmed.xhtml&quot;;</span>
   }
 
   /**
@@ -346,7 +403,7 @@ import src.repository.UserRepository;
   @GET
   @Path(&quot;/shopping-cart&quot;)
   public String shoppingCart() {
-<span class="nc" id="L349">    return &quot;shoppingCart.xhtml&quot;;</span>
+<span class="nc" id="L406">    return &quot;shoppingCart.xhtml&quot;;</span>
   }
 
   /**
@@ -363,26 +420,26 @@ import src.repository.UserRepository;
       @FormParam(&quot;sku&quot;) String skuStr, @FormParam(&quot;amount&quot;) String amountStr) {
 
     try {
-<span class="nc" id="L366">      long sku = Long.parseLong(skuStr);</span>
-<span class="nc" id="L367">      long amount = Long.parseLong(amountStr);</span>
-<span class="nc" id="L368">      String email = new AuthController().extractEmail(request);</span>
+<span class="nc" id="L423">      long sku = Long.parseLong(skuStr);</span>
+<span class="nc" id="L424">      long amount = Long.parseLong(amountStr);</span>
+<span class="nc" id="L425">      String email = new AuthController().extractEmail(request);</span>
 
-<span class="nc bnc" id="L370" title="All 2 branches missed.">      if (email == null) {</span>
-<span class="nc" id="L371">        return Response.status(Response.Status.UNAUTHORIZED).build();</span>
+<span class="nc bnc" id="L427" title="All 2 branches missed.">      if (email == null) {</span>
+<span class="nc" id="L428">        return Response.status(Response.Status.UNAUTHORIZED).build();</span>
       }
 
-<span class="nc" id="L374">      ShoppingCart shoppingCart =</span>
-<span class="nc" id="L375">          shoppingCartController.getOrUpdateShoppingCart(sku, amount, email);</span>
-<span class="nc" id="L376">      shoppingCartRepository.merge(shoppingCart);</span>
+<span class="nc" id="L431">      ShoppingCart shoppingCart =</span>
+<span class="nc" id="L432">          shoppingCartController.getOrUpdateShoppingCart(sku, amount, email);</span>
+<span class="nc" id="L433">      shoppingCartRepository.merge(shoppingCart);</span>
 
-<span class="nc" id="L378">      return Response.seeOther(</span>
+<span class="nc" id="L435">      return Response.seeOther(</span>
               new URI(
-<span class="nc" id="L380">                  String.format(&quot;%s/detail?sku=%s&quot;, authController.getBaseURL(request), skuStr)))</span>
-<span class="nc" id="L381">          .build();</span>
-<span class="nc" id="L382">    } catch (Exception ignored) {</span>
+<span class="nc" id="L437">                  String.format(&quot;%s/detail?sku=%s&quot;, authController.getBaseURL(request), skuStr)))</span>
+<span class="nc" id="L438">          .build();</span>
+<span class="nc" id="L439">    } catch (Exception ignored) {</span>
     }
 
-<span class="nc" id="L385">    return Response.status(Status.BAD_REQUEST).build();</span>
+<span class="nc" id="L442">    return Response.status(Status.BAD_REQUEST).build();</span>
   }
 
   /**
@@ -396,18 +453,19 @@ import src.repository.UserRepository;
   @Path(&quot;/shopping-cart/change-amount/{sku}/{amount}&quot;)
   public Response changeAmount(
       @PathParam(&quot;amount&quot;) String amountStr, @PathParam(&quot;sku&quot;) String skuStr) {
-<span class="nc" id="L399">    long sku = Long.parseLong(skuStr);</span>
-<span class="nc" id="L400">    String email = new AuthController().extractEmail(request);</span>
+<span class="nc" id="L456">    long sku = Long.parseLong(skuStr);</span>
+<span class="nc" id="L457">    String email = new AuthController().extractEmail(request);</span>
 
-<span class="nc bnc" id="L402" title="All 2 branches missed.">    if (email == null) {</span>
-<span class="nc" id="L403">      return Response.status(Response.Status.UNAUTHORIZED).build();</span>
+<span class="nc bnc" id="L459" title="All 2 branches missed.">    if (email == null) {</span>
+<span class="nc" id="L460">      return Response.status(Response.Status.UNAUTHORIZED).build();</span>
     }
 
-<span class="nc" id="L406">    ShoppingCart shoppingCart = shoppingCartRepository.findBySkuAndEmail(sku, email);</span>
-<span class="nc" id="L407">    shoppingCart.setAmount(shoppingCartController.getMaxAmount(Long.parseLong(amountStr), shoppingCart));</span>
-<span class="nc" id="L408">    shoppingCartRepository.merge(shoppingCart);</span>
+<span class="nc" id="L463">    ShoppingCart shoppingCart = shoppingCartRepository.findBySkuAndEmail(sku, email);</span>
+<span class="nc" id="L464">    shoppingCart.setAmount(</span>
+<span class="nc" id="L465">        shoppingCartController.getMaxAmount(Long.parseLong(amountStr), shoppingCart));</span>
+<span class="nc" id="L466">    shoppingCartRepository.merge(shoppingCart);</span>
 
-<span class="nc" id="L410">    return Response.ok().build();</span>
+<span class="nc" id="L468">    return Response.ok().build();</span>
   }
 
   /**
@@ -419,15 +477,15 @@ import src.repository.UserRepository;
   @DELETE
   @Path(&quot;/shopping-cart/delete-entry/{uuid}&quot;)
   public Response deleteEntry(@PathParam(&quot;uuid&quot;) String entryUuidStr) {
-<span class="nc" id="L422">    String email = new AuthController().extractEmail(request);</span>
+<span class="nc" id="L480">    String email = new AuthController().extractEmail(request);</span>
 
-<span class="nc bnc" id="L424" title="All 2 branches missed.">    if (email == null) {</span>
-<span class="nc" id="L425">      return Response.status(Response.Status.UNAUTHORIZED).build();</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">    if (email == null) {</span>
+<span class="nc" id="L483">      return Response.status(Response.Status.UNAUTHORIZED).build();</span>
     }
 
-<span class="nc" id="L428">    shoppingCartRepository.deleteByUuid(entryUuidStr);</span>
+<span class="nc" id="L486">    shoppingCartRepository.deleteByUuid(entryUuidStr);</span>
 
-<span class="nc" id="L430">    return Response.ok().build();</span>
+<span class="nc" id="L488">    return Response.ok().build();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

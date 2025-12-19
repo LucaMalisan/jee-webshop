@@ -21,14 +21,16 @@
             </div>
         </c:when>
         <c:otherwise>
-            <a href="#{request.contextPath}/application/login" id="user">
+            <a href="#{authController.getBaseURL(request)}/login" id="user">
                 <span class="material-symbols-outlined">person</span>
                 <p> Login </p>
             </a>
         </c:otherwise>
     </c:choose>
 
-
+    <a href="#{authController.getBaseURL(request)}/logout" title="Logout">
+        <span class="material-symbols-outlined big-icon">logout</span>
+    </a>
     <a href="#{authController.getBaseURL(request)}/shopping-cart" id="go-to-cart">
         <span class="material-symbols-outlined big-icon">shopping_cart</span>
         <div class="circle accent-background" id="cart-count"> #{shoppingCartController.getShoppingCartEntries(request).size()} </div>

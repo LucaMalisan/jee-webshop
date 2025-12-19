@@ -2,9 +2,6 @@ package src.auth;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import lombok.Getter;
 
 /**
@@ -22,20 +19,14 @@ public class Auth0AuthenticationConfig {
 
     @PostConstruct
     public void init() {
-        // Get authentication config values from env-entries in web.xml
-        try {
-            Context env = (Context)new InitialContext().lookup("java:comp/env");
-
-            this.domain = (String) env.lookup("auth0.domain");
-            this.clientId = (String) env.lookup("auth0.clientId");
-            this.clientSecret = (String) env.lookup("auth0.clientSecret");
-            this.scope = (String) env.lookup("auth0.scope");
-        } catch (NamingException ne) {
-            throw new IllegalArgumentException("Unable to lookup auth0 configuration properties from web.xml", ne);
-        }
+        // Get authentication config values from env
+            this.domain = System.getenv(("AUTH0_DOMAIN"));
+            this.clientId = System.getenv(("AUTH0_CLIENTID"));
+            this.clientSecret = System.getenv(("AUTH0_CLIENTSECRET"));
+            this.scope = System.getenv(("AUTH0_SCOPE"));
 
         if (this.domain == null || this.clientId == null || this.clientSecret == null || this.scope == null) {
-            throw new IllegalArgumentException("domain, clientId, clientSecret, and scope must be set in web.xml");
+            throw new IllegalArgumentException("domain, clientId, clientSecret, and scope are not set");
         }
     }
 }
