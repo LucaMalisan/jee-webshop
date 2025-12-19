@@ -17,3 +17,7 @@ Die Applikation ist dann <a href="http://localhost:8080/jee-webshop/application"
 Bei jedem Unit Test werden automatisch Jacoco Reports generiert. Um dieses Verhalten zu triggern, kann lokal folgender Command ausgeführt werden: <br>
 <i> mvn install </i> <br>
 Die generierten Reports liegen unter target/site/jacoco
+
+<h2> API Test </h2>
+Mittels Postman kann die API getestet werden. Dazu muss zuerst "Get token" ausgeführt werden, anschliessend muss das erhaltene Token im Request unter Authorization eingetragen werden
+<img width="1393" height="707" alt="Bild001974" src="https://github.com/user-attachments/assets/0f6a9168-73e8-48f9-823d-fa0cc53046bb" />
