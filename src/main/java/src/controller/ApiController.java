@@ -89,8 +89,6 @@ public class ApiController {
 
   /**
    * Redirect user to auth0 login page
-   *
-   * @return 303 to auth0 login page
    */
   @GET
   @Path("/logout")
@@ -102,9 +100,9 @@ public class ApiController {
             "https://%s/v2/logout?client_id=%s&returnTo=%s",
             config.getDomain(), config.getClientId(), callbackUrl);
 
-    if (request.getSession() != null) {
-      request.getSession().invalidate();
-    }
+  //  if (request.getSession() != null) {
+  //    request.getSession().invalidate();
+  //  }
 
     if (request.getCookies() != null) {
       Arrays.stream(request.getCookies())

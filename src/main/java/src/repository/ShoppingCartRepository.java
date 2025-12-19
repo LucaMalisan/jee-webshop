@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import src.model.ShoppingCart;
 
 @ApplicationScoped
@@ -35,12 +36,13 @@ public class ShoppingCartRepository {
    */
   public double getTotalPrice(String email) {
     // (quantity) * (price per quantity) of all articles added up
-    return (Double)
-        entitymanager
+    return Optional.ofNullable(entitymanager
             .createQuery(
                 "SELECT CAST(sum(c.amount * c.article.sellingPrice) as float) FROM ShoppingCart c WHERE c.email = ?1")
             .setParameter(1, email)
-            .getSingleResult();
+            .getSingleResult())
+                .map(e -> (Double) e)
+                .orElse(0.0);
   }
 
   /**
@@ -51,12 +53,14 @@ public class ShoppingCartRepository {
    */
   public double getTotalDiscount(String email) {
     // (quantity) * (difference between list price and selling price) of all articles added up
-    return (Double)
-        entitymanager
+    return Optional.ofNullable(entitymanager
             .createQuery(
-                "SELECT CAST(sum(c.amount * (c.article.listPrice -  c.article.sellingPrice)) as float) FROM ShoppingCart c WHERE c.email = ?1")
+                    "SELECT CAST(sum(c.amount * (c.article.listPrice -  c.article.sellingPrice)) as float) FROM ShoppingCart c WHERE c.email = ?1")
             .setParameter(1, email)
-            .getSingleResult();
+            .getSingleResult())
+            .map(e -> (Double) e)
+            .orElse(0.0);
+
   }
 
   /**
