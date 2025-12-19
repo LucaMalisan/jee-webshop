@@ -1,0 +1,2 @@
+create-jdbc-connection-pool --datasourceClassname=org.postgresql.ds.PGSimpleDataSource --resType=javax.sql.DataSource --property 'DatabaseName=postgres:Password=PostgresAdmin2025!:PortNumber=5432:ServerName=35.195.195.52:User=postgres:currentSchema=jee_webshop' PostgresPool
+create-jdbc-resource --connectionpoolid PostgresPool jdbc/postgres_resource

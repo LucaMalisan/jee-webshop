@@ -1,4 +1,4 @@
-# Build-Stage bleibt gleich (Maven mit JDK 21)
+# build stage with maven
 FROM jelastic/maven:3.9.5-openjdk-21 AS build
 
 WORKDIR /app
@@ -21,23 +21,23 @@ ENV EMAIL_PASSWORD "buwy rwwp yyyh nqid"
 
 WORKDIR /opt/payara
 
-COPY --from=build /app/target/jee-webshop.war ./deployments
-COPY postgresql-42.7.8.jar  $PAYARA_HOME/glassfish/lib/
-COPY passwordfile .
+# built war-file is copied into deloyments folder
+# --> will be autodeployed by payara
 
-RUN cd $PAYARA_HOME/glassfish/lib && ls -l
+COPY --from=build /app/target/jee-webshop.war ./deployments
+
+# add postgres driver
+COPY postgresql-42.7.8.jar  $PAYARA_HOME/glassfish/lib/
+
+# add authentication file for post boot commands
+COPY passwordfile .
 
 EXPOSE 4848 8080 8181 8081 9009
 
-RUN asadmin start-domain && \
-    asadmin -u admin --passwordfile passwordfile add-library glassfish/lib/postgresql-42.7.8.jar && \
-    asadmin  -u admin --passwordfile passwordfile create-jdbc-connection-pool \
-      --datasourceClassname=org.postgresql.ds.PGSimpleDataSource \
-      --resType=javax.sql.DataSource \
-      --property "DatabaseName=jee_webshop:Password=admin:PortNumber=5433:ServerName=host.docker.internal:User=postgres" \
-      PostgresPool && \
-    asadmin -u admin --passwordfile passwordfile create-jdbc-resource --enabled=true --poolName=PostgresPool postgres_resource && \
-    asadmin -u admin --passwordfile passwordfile deploy --name jee-webshop /opt/payara/deployments/jee-webshop.war && \
-    asadmin -u admin --passwordfile passwordfile stop-domain
+# copy post boot script into designated folder
+# --> will be executed automatically after boot by payara
 
-CMD ["asadmin", "start-domain", "--verbose"]
+USER root
+COPY post-boot-commands.asadmin $POSTBOOT_COMMANDS
+RUN chown payara $POSTBOOT_COMMANDS
+
