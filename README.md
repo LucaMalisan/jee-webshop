@@ -11,7 +11,8 @@
 <h2> Installation </h2>
 Die Datenbank läuft extern in der Google Cloud, weshalb dazu keine weitere Installation nötig ist. 
 Um die Applikation zu deployen, muss das Dockerfile ausgeführt werden. Wichtig ist, dass die Applikation auf Port 8080 läuft, dass die Authentifizierung mit Auth0 korrekt funktioniert. 
-Die Applikation ist dann <a href="http://localhost:8080/jee-webshop/application"> hier </a> erreichbar
+Die Applikation ist dann <a href="http://localhost:8080/jee-webshop/application"> hier </a> erreichbar <br> <br>
+Das Dockerfile wurde mit Podman getestet, die Kompatibilität mit Docker wird nicht gewährt, sollte aber vorhanden sein.
 
 <h2> Unit Tests </h2>
 Bei jedem Unit Test werden automatisch Jacoco Reports generiert. Um dieses Verhalten zu triggern, kann lokal folgender Command ausgeführt werden: <br>
